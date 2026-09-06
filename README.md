@@ -3,7 +3,7 @@
 A clickable prototype of an alternative Investments tab for Vault22. Not the IM Portal, and not a
 built feature — this is a design proposal put up so colleagues can assess it live.
 
-**Live:** _(GitHub Pages link goes here once Pages is enabled)_
+**Live:** https://gflash-vault22.github.io/vault22-invest-tab/
 
 ## What it proposes
 
@@ -48,9 +48,11 @@ The **Generate statement** button resolves the Concise/Detailed and period selec
 | Concise · to today | `statements/Vault22-Concise-2026-09-06.pdf` |
 | Detailed · to today | `statements/Vault22-Detailed-2026-09-06.pdf` |
 
-Wiring is switched on by `window.STATEMENTS_BASE` in `index.html`. While it is unset the button
-explains that the PDFs ship with the hosted build, so the page degrades cleanly rather than opening
-a dead link.
+Wiring is switched on by `window.STATEMENTS_BASE` in `index.html`, which is set to `statements/`
+in this build, so the button serves the real PDFs. If it is ever unset the button falls back to an
+explanatory message rather than opening a dead link.
+
+The PDFs are specimens, marked `SPECIMEN · REAL MARKET PRICES, INVENTED HOLDINGS` on every page.
 
 ## Layout
 
