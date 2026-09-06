@@ -1,0 +1,1677 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style><title>Vault22 Invest Rebuild</title></head><body>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F6F9F9; --surface:#FFFFFF; --raise:#FBFDFD;
+  --ink:#0A1929; --ink2:#2C4451; --muted:#5D6F77; --faint:#8A9AA1;
+  --line:#E0E8E8; --line2:#EDF2F2;
+  --brand:#00D4AA; --accent:#00846C; --accent-soft:#E4F7F2;
+  --gain:#0C7350; --loss:#B23A2C;
+  --amber:#95610A; --amber-bg:#FCF4E4; --amber-line:#EBD6A9;
+  --navy-bg:#0A1929; --navy-ink:#DCE9E9; --navy-muted:#7F98A0;
+  --adv-bg:#EAF0F5; --adv-ink:#28455C; --adv-line:#C9D8E4;
+  --exo-bg:#FCF4E4; --exo-ink:#7C5008; --exo-line:#EBD6A9;
+  --tip-bg:#0A1929; --tip-ink:#E7F0F0;
+  --shadow:0 1px 2px rgba(10,25,41,.05), 0 8px 28px -14px rgba(10,25,41,.18);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#061220; --surface:#0D1E2C; --raise:#122636;
+  --ink:#E7F0F0; --ink2:#C4D5D8; --muted:#90A5AB; --faint:#6F868E;
+  --line:#1D3241; --line2:#162936;
+  --brand:#00D4AA; --accent:#2ADFB8; --accent-soft:#0F2E2A;
+  --gain:#38C892; --loss:#E97A68;
+  --amber:#E3A93F; --amber-bg:#2A2213; --amber-line:#4A3A1B;
+  --navy-bg:#03080F; --navy-ink:#DCE9E9; --navy-muted:#7F98A0;
+  --adv-bg:#132A3B; --adv-ink:#9FC2DC; --adv-line:#21425A;
+  --exo-bg:#2A2213; --exo-ink:#E3B865; --exo-line:#4A3A1B;
+  --tip-bg:#E7F0F0; --tip-ink:#0A1929;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -16px rgba(0,0,0,.7);
+}}
+:root[data-theme="dark"]{
+  --ground:#061220; --surface:#0D1E2C; --raise:#122636;
+  --ink:#E7F0F0; --ink2:#C4D5D8; --muted:#90A5AB; --faint:#6F868E;
+  --line:#1D3241; --line2:#162936;
+  --brand:#00D4AA; --accent:#2ADFB8; --accent-soft:#0F2E2A;
+  --gain:#38C892; --loss:#E97A68;
+  --amber:#E3A93F; --amber-bg:#2A2213; --amber-line:#4A3A1B;
+  --navy-bg:#03080F; --navy-ink:#DCE9E9; --navy-muted:#7F98A0;
+  --adv-bg:#132A3B; --adv-ink:#9FC2DC; --adv-line:#21425A;
+  --exo-bg:#2A2213; --exo-ink:#E3B865; --exo-line:#4A3A1B;
+  --tip-bg:#E7F0F0; --tip-ink:#0A1929;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px -16px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);
+  font-family:Manrope,"Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.num{font-variant-numeric:tabular-nums;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.02em}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* tooltip */
+.tip{position:relative;border-bottom:1px dotted currentColor;cursor:help;white-space:nowrap}
+.tip::after{content:"ⓘ";font-size:.78em;margin-left:3px;opacity:.6;border:0}
+.tipbox{position:absolute;left:0;top:calc(100% + 7px);z-index:30;width:max-content;max-width:250px;
+  white-space:normal;background:var(--tip-bg);color:var(--tip-ink);border-radius:7px;padding:8px 11px;
+  font-size:11.5px;font-weight:500;line-height:1.45;letter-spacing:0;
+  box-shadow:0 6px 22px -8px rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:opacity .12s}
+.tip:hover .tipbox,.tip:focus .tipbox,.tip:focus-within .tipbox{opacity:1;visibility:visible}
+.tipbox b{font-weight:700}
+
+/* prototype chrome */
+.proto{background:var(--navy-bg);color:var(--navy-ink);padding:24px 28px 22px}
+.proto-in{max-width:1180px;margin:0 auto}
+.eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand)}
+.proto h1{font-size:24px;font-weight:800;margin:7px 0 7px}
+.proto p{margin:0;color:var(--navy-muted);max-width:68ch;font-size:13.5px}
+.proto p b{color:var(--navy-ink);font-weight:600}
+.rules{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.rule{border:1px solid var(--navy-muted);border-radius:6px;padding:3px 10px;font-size:11.5px}
+.rule b{color:var(--brand);font-weight:700}
+
+.wrap{max-width:1180px;margin:0 auto;padding:22px 28px 50px}
+.app{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--shadow);display:grid;grid-template-columns:190px 1fr}
+.appbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:13px 20px;border-bottom:1px solid var(--line);background:var(--raise);
+  border-radius:13px 13px 0 0}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;letter-spacing:-.03em}
+.logo i{display:grid;place-items:center;width:24px;height:24px;border-radius:6px;
+  background:var(--brand);color:#03231D;font-style:normal;font-weight:800;font-size:13px}
+.appbar-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);border-radius:20px;padding:4px 11px;font-size:12px;font-weight:600;color:var(--ink2)}
+.pill.sel{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.who{display:flex;align-items:center;gap:7px;background:var(--navy-bg);color:var(--navy-ink);
+  border-radius:20px;padding:4px 5px 4px 11px;font-size:12px;font-weight:600}
+.who span{background:var(--brand);color:#03231D;border-radius:20px;padding:2px 8px;font-size:10.5px;font-weight:700}
+
+nav{border-right:1px solid var(--line);padding:14px 10px;background:var(--raise);border-radius:0 0 0 13px}
+nav .lbl{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding:0 10px 8px}
+nav a{display:block;padding:7px 10px;border-radius:7px;color:var(--ink2);text-decoration:none;font-size:13px;font-weight:500}
+nav a:hover{background:var(--line2)}
+nav a[aria-current]{background:var(--accent-soft);color:var(--accent);font-weight:700;box-shadow:inset 2px 0 0 var(--accent)}
+main{padding:22px 24px 28px;min-width:0}
+.crumb{font-size:12px;color:var(--muted);margin-bottom:5px}
+main h2{font-size:23px;font-weight:800}
+.sub{color:var(--muted);font-size:13px;margin:2px 0 18px}
+.live{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--brand);margin-right:5px;vertical-align:baseline;box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* total value */
+.tv{border:1px solid var(--line);border-radius:12px;margin-bottom:20px}
+.tv-top{background:var(--navy-bg);color:var(--navy-ink);padding:16px 20px;border-radius:11px 11px 0 0;
+  display:flex;flex-wrap:wrap;align-items:flex-end;gap:5px 22px}
+.tv-lab{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--brand);width:100%}
+.tv-big{font-size:32px;font-weight:800;letter-spacing:-.035em;line-height:1.05}
+.tv-rate{color:var(--navy-muted);font-size:12.5px;font-weight:600;padding-bottom:6px}
+.tv-split{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line)}
+.tv-cell{background:var(--surface);padding:13px 20px}
+.tv-btn{display:block;width:100%;text-align:left;padding:0}
+.tv-btn .k,.tv-btn .v,.tv-btn .p{display:block}
+.tv-cell:first-child{border-bottom-left-radius:11px}
+.tv-cell:last-child{border-bottom-right-radius:11px}
+.tv-btn:hover .k{color:var(--accent)}
+.tv-btn .chev{float:right;margin-top:3px}
+.wal{border-top:1px solid var(--line);border-radius:0 0 11px 11px;background:var(--raise);padding:6px 20px 12px}
+.wal-row{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--line2)}
+.wal-row:last-child{border-bottom:0}
+.wal-n{font-weight:700;font-size:13px}
+.wal-v{margin-left:auto;font-weight:700;font-size:14px}
+.tv-cell{background:var(--surface);padding:13px 20px}
+.tv-cell .k{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.tv-cell .v{font-size:19px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+.tv-cell .p{font-size:12px;color:var(--muted)}
+.bar{height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:9px}
+.bar i{display:block;height:100%}
+
+/* currency group */
+.grp{margin-bottom:20px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.grp-head{display:flex;flex-wrap:wrap;align-items:center;gap:11px;padding:13px 18px;
+  background:var(--navy-bg);color:var(--navy-ink)}
+.grp-name{font-size:14px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.grp-tot{margin-left:auto;font-size:19px;font-weight:800;letter-spacing:-.025em;color:var(--brand)}
+.avail{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 18px;
+  border-bottom:1px solid var(--line);background:var(--accent-soft)}
+.avail .k{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.avail .v{font-weight:800;font-size:15px}
+.avail .btn{margin-left:auto}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--surface);
+  border-radius:7px;padding:6px 13px;font-size:12.5px;font-weight:700;display:inline-block}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-soft);filter:none}
+.btn.sm{padding:4px 10px;font-size:12px}
+
+.acct{border-bottom:1px solid var(--line)}
+.acct:last-child{border-bottom:0}
+.acct-head{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:10px 18px}
+.acct-name{font-weight:700;font-size:13.5px}
+.ref{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint)}
+.badge{border-radius:5px;padding:2.5px 8px;font-size:10px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;border:1px solid}
+.b-adv{background:var(--adv-bg);color:var(--adv-ink);border-color:var(--adv-line)}
+.b-exo{background:var(--exo-bg);color:var(--exo-ink);border-color:var(--exo-line)}
+.acct-val{margin-left:auto;font-weight:700;font-size:14px}
+.acct-foot{background:var(--raise);border-top:1px solid var(--line2)}
+
+/* rows */
+.row{border-top:1px solid var(--line2)}
+.rowgrid{display:grid;grid-template-columns:16px minmax(150px,1.6fr) minmax(108px,.9fr) 110px 96px auto;
+  gap:12px;align-items:center;padding:10px 18px;width:100%;text-align:left}
+button.rowgrid:hover{background:var(--line2)}
+.chev{color:var(--faint);font-size:11px;transition:transform .15s;display:inline-block}
+.row[data-open] .chev{transform:rotate(90deg)}
+.r-name{font-weight:700;font-size:13.5px}
+.r-name .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--accent);margin-right:7px}
+.r-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
+.chip{display:inline-block;border-radius:20px;padding:2.5px 9px;font-size:11px;font-weight:600;
+  border:1px solid var(--line);color:var(--ink2);max-width:100%}
+.chip-goal{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.chip-none{border-style:dashed;color:var(--faint)}
+.chip-flag{border-color:var(--amber-line);background:var(--amber-bg);color:var(--amber);
+  font-size:10.5px;margin-top:4px;display:inline-block}
+.r-val{text-align:right}
+.r-val .v{font-weight:700;font-size:13.5px}
+.r-val .c{font-size:11px;color:var(--muted)}
+.r-pl{text-align:right;font-weight:700;font-size:13px}
+.r-pl .pct{font-weight:600;font-size:11.5px;opacity:.85}
+.gain{color:var(--gain)} .loss{color:var(--loss)}
+.rowline{display:flex;align-items:center;gap:10px;padding-right:18px}
+.rowline .rowgrid{flex:1;min-width:0;grid-template-columns:16px minmax(140px,1.6fr) minmax(104px,.9fr) 108px 92px}
+.rowline .acts{flex:none;justify-content:flex-end}
+.hn{display:block;font-weight:600;color:var(--ink);line-height:1.25}
+table.fit td.nm .dsc{display:block;font-size:10.5px;color:var(--faint);
+  font-family:"IBM Plex Mono",monospace;letter-spacing:-.01em;margin-top:1px}
+table.sm th,table.sm td{font-size:11.5px}
+table.sm td{padding:6px 0}
+.pcell{color:var(--faint);font-size:10px}
+.card h5{margin:0 0 8px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.txctl{margin-left:auto;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.sel{border:1px solid var(--line);border-radius:7px;padding:4px 8px;font:inherit;font-size:12px;
+  font-weight:600;color:var(--ink);background:var(--surface)}
+.sel:hover{border-color:var(--accent)}
+tr.empty td{color:var(--faint);text-align:left;font-style:normal}
+.legend i.dash{height:0;border-top:2px dashed var(--muted);background:none}
+.legend i.dash.amber{border-color:var(--amber)}
+.pchart{margin-top:2px}
+/* modal */
+.mbk{position:fixed;inset:0;background:rgba(8,20,30,.55);z-index:60;display:flex;
+  align-items:flex-start;justify-content:center;padding:28px 16px;overflow:auto}
+.mbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;width:100%;max-width:560px;
+  box-shadow:0 24px 60px -20px rgba(0,0,0,.55);overflow:hidden}
+.mhead{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);background:var(--raise)}
+.mhead h3{font-size:17px;font-weight:800}
+.mhead .msub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.mx{margin-left:auto;font-size:19px;line-height:1;color:var(--muted);padding:2px 6px;border-radius:6px}
+.mx:hover{background:var(--line2);color:var(--ink)}
+.mbody{padding:16px 18px;display:flex;flex-direction:column;gap:15px}
+.mfoot{display:flex;gap:8px;justify-content:flex-end;padding:13px 18px;border-top:1px solid var(--line);background:var(--raise)}
+.fgrp > .flab{font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:6px}
+.finput{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:9px 12px;background:var(--raise)}
+.finput .cur{font-weight:700;color:var(--muted)}
+.finput input{border:0;background:none;font:inherit;font-size:17px;font-weight:700;width:100%;color:var(--ink);
+  font-family:"IBM Plex Mono",monospace}
+.finput input:focus{outline:none}
+.fhint{font-size:11.5px;color:var(--muted);margin-top:5px}
+.opt{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin-bottom:6px;font-size:12.5px}
+.opt:last-child{margin-bottom:0}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.opt b{font-weight:700}
+.opt .sub{color:var(--muted);display:block;font-size:11.5px}
+.opt .rad{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);flex:none}
+.opt.on .rad{border-color:var(--accent);box-shadow:inset 0 0 0 3px var(--accent)}
+.opt .amt{margin-left:auto;font-weight:700}
+.mlinks{display:flex;flex-wrap:wrap;gap:7px}
+.mnote{font-size:12px;color:var(--muted)}
+.costrow{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:5px 0;border-bottom:1px solid var(--line2)}
+.costrow:last-child{border-bottom:0}
+.costrow b{font-weight:700}
+.allo{display:flex;flex-direction:column;gap:5px}
+.allo-row{display:grid;grid-template-columns:118px 1fr 44px;gap:9px;align-items:center;font-size:12px}
+.allo-bar{height:7px;border-radius:4px;background:var(--line);overflow:hidden}
+.allo-bar i{display:block;height:100%;background:var(--brand)}
+.allo-row b{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px}
+.perfrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(84px,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.perfrow div{background:var(--surface);padding:8px 10px}
+.perfrow .pk{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.perfrow .pv{font-weight:800;font-size:14px;letter-spacing:-.02em;margin-top:1px}
+.mdesc{font-size:12.5px;color:var(--ink2);line-height:1.5}
+.mdesc + .mdesc{margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.cchip{border:1px solid var(--line);border-radius:20px;padding:2.5px 9px;font-size:11px;color:var(--muted)}
+.cchip b{color:var(--ink);font-weight:700}
+.stmt{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:12px}
+.stmt-card{border:1px solid var(--line);border-radius:11px;padding:15px;display:flex;flex-direction:column;gap:9px}
+.stmt-card.on{border-color:var(--accent);background:var(--accent-soft)}
+.stmt-top{display:flex;align-items:flex-start;gap:9px}
+.stmt-top .rad{width:15px;height:15px;border-radius:50%;border:2px solid var(--line);flex:none;margin-top:2px}
+.stmt-card.on .rad{border-color:var(--accent);box-shadow:inset 0 0 0 3px var(--accent)}
+.stmt-card h5{margin:0;font-size:14px;font-weight:800;letter-spacing:-.01em;color:var(--ink);text-transform:none}
+.stmt-card .pg{font-size:11px;color:var(--faint);font-family:"IBM Plex Mono",monospace}
+.stmt-card p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.5}
+.stmt-card ul{margin:0;padding-left:16px;font-size:12px;color:var(--muted);line-height:1.6}
+.stmt-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.stmt-row .flab{font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);width:100%}
+.pick{border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:12.5px;flex:1;min-width:190px;cursor:pointer}
+.pick.on{border-color:var(--accent);background:var(--accent-soft)}
+.pick b{display:block;font-weight:700;color:var(--ink)}
+.pick span{color:var(--muted);font-size:11.5px}
+.issued{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:var(--muted);
+  border-top:1px solid var(--line);padding-top:11px;margin-top:2px}
+.issued b{color:var(--ink);font-weight:700}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:80;max-width:min(560px,92vw);
+  background:var(--navy-bg);color:var(--navy-ink);border-radius:10px;padding:12px 16px;font-size:13px;
+  box-shadow:0 14px 40px -14px rgba(0,0,0,.6);opacity:0;visibility:hidden;transition:opacity .16s,transform .16s}
+#toast.on{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-4px)}
+#toast b{color:var(--brand);font-weight:700}
+
+table.fit{min-width:0}
+table.fit td.nm{white-space:normal}
+table.fit td.nm .tk{margin-right:0}
+table.fit td.nm .dsc{display:block;font-size:11px;line-height:1.3}
+.ctitle{font-size:13.5px;font-weight:800;letter-spacing:-.01em}
+.retline{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 11px;margin:1px 0 10px}
+.ret{font-size:24px;font-weight:800;letter-spacing:-.03em}
+.ret-pct{font-size:15px;font-weight:700}
+.ret-note{font-size:12px;color:var(--muted)}
+.legend i.dash{height:0;border-top:2px dashed var(--muted);background:none}
+.gsum{font-size:12.5px;color:var(--muted)}
+.gsum b.num{color:var(--ink)}
+.gsum b.gain{color:var(--gain)}
+.buycard{background:var(--adv-bg);border-color:var(--adv-line)}
+.buycard > h4{color:var(--adv-ink)}
+.acts{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+
+/* expanded drawer */
+.dr{padding:4px 18px 16px;background:var(--raise);border-top:1px solid var(--line2)}
+.dr-note{display:flex;gap:9px;padding:9px 12px;margin:10px 0 12px;border-radius:8px;font-size:12.5px}
+.dr-note.adv{background:var(--adv-bg);border:1px solid var(--adv-line);color:var(--adv-ink)}
+.dr-note.exo{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber)}
+.dr-note b{font-weight:700}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:11px}
+.card > h4{margin:0 0 11px;font-size:13.5px;font-weight:800;letter-spacing:-.01em}
+.card > h4 small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);letter-spacing:0;margin-top:1px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:500px}
+th{font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);
+  text-align:right;padding:0 0 7px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 0;border-bottom:1px solid var(--line2);text-align:right;font-size:12.5px}
+td.nm .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;margin-right:8px;color:var(--ink)}
+td.nm .dsc{color:var(--muted)}
+tr.tot td{font-weight:700;border-bottom:0;border-top:1px solid var(--line)}
+tr.cash td{color:var(--muted)}
+.rounding{font-size:11.5px;color:var(--faint);margin:8px 0 0}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px 18px}
+.kv .k{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.kv .v{font-weight:700;font-size:14.5px;margin-top:1px}
+.kv .v small{display:block;font-weight:500;font-size:11.5px;color:var(--muted);letter-spacing:0}
+.hr{height:1px;background:var(--line);margin:13px 0}
+
+/* chart */
+.chart-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 12px;margin-bottom:5px}
+.chart-head .p{font-size:23px;font-weight:800;letter-spacing:-.03em}
+.chart-head .as{font-size:12px;color:var(--muted)}
+.ranges{display:flex;gap:3px;margin-left:auto}
+.ranges button{border:1px solid var(--line);border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:600;color:var(--muted)}
+.ranges button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+svg{display:block;width:100%;height:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:7px}
+.legend i{display:inline-block;width:16px;height:2px;vertical-align:middle;margin-right:6px}
+
+/* page sections */
+.sec{margin-top:28px}
+.sec > h3{font-size:18px;font-weight:800;letter-spacing:-.025em}
+.sec > .sh{font-size:13px;color:var(--muted);margin:2px 0 13px}
+.panel{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.panel > h4{margin:0 0 11px;font-size:14px;font-weight:800}
+.panel > h4 small{display:block;font-weight:500;font-size:12px;color:var(--muted);margin-top:1px}
+.note{display:flex;gap:9px;padding:10px 13px;border-radius:8px;font-size:12.5px;
+  background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber)}
+.note b{font-weight:700}
+.note.calm{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+/* goals */
+.goal{border:1px solid var(--line);border-radius:12px;padding:15px;margin-bottom:11px}
+.goal-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.goal-top h4{margin:0;font-size:15.5px;font-weight:800}
+.goal-top .tgt{color:var(--muted);font-size:12.5px}
+.goal-top .pc{margin-left:auto;font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--accent)}
+.track{height:9px;border-radius:5px;background:var(--line);overflow:hidden;margin:9px 0 12px}
+.track i{display:block;height:100%;background:var(--brand)}
+.fund{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font-size:12.5px;color:var(--muted);margin-top:11px}
+.src{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);
+  border-radius:7px;padding:4px 9px;background:var(--raise);font-size:12px}
+.src b{font-weight:700;color:var(--ink)}
+
+/* decisions */
+.dec{min-width:560px}
+.dec th,.dec td{text-align:left}
+.dec td{vertical-align:top;padding:9px 14px 9px 0}
+.dec td:first-child{font-weight:700;width:29%}
+.dec td:last-child{width:92px;padding-right:0}
+.st{border-radius:5px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;white-space:nowrap;border:1px solid}
+.st-y{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.st-o{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-line)}
+.foot{max-width:1180px;margin:0 auto;padding:0 28px 36px;color:var(--muted);font-size:12px}
+.foot b{color:var(--ink);font-weight:700}
+[hidden]{display:none!important}
+
+@media (max-width:1000px){.tv-split{grid-template-columns:1fr}}
+@media (max-width:880px){
+  .app{grid-template-columns:1fr} nav{display:none}
+  .rowgrid{grid-template-columns:16px 1fr;gap:5px 10px}
+  .r-goal,.r-val,.r-pl,.acts{grid-column:2}
+  .r-val,.r-pl{text-align:left}
+  .acts{justify-content:flex-start}
+  .tv-split{grid-template-columns:1fr}
+  .wrap,.proto,.foot{padding-left:16px;padding-right:16px}
+}
+</style>
+
+<div class="proto">
+  <div class="proto-in">
+    <div class="eyebrow">Vault22 · Invest module · Prototype, not built</div>
+    <h1>One page, one Total value, one advice boundary</h1>
+    <p>Third pass. Everything expands in place — a portfolio opens to its read-only look-through, a security to its full detail. Managed portfolios and direct securities sit in <b>separate accounts</b>, because one is advised and the other is not. Managed figures are the statement specimen values at 30 Jun 2026; securities carry Uday's numbers.</p>
+    <div class="rules">
+      <span class="rule"><b>1 decimal</b> — percentages</span>
+      <span class="rule"><b>Cents</b> — on prices and income, not balances</span>
+      <span class="rule"><b>Detail in tooltips</b> — not in the layout</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="app">
+  <div class="appbar">
+    <div class="logo"><i>V</i> Vault22</div>
+    <div class="appbar-r">
+      <span class="pill sel">ZAR</span>
+      <span class="pill">2 regions</span>
+      <span class="who">Gregory Flash <span>Premium</span></span>
+    </div>
+  </div>
+
+  <nav>
+    <div class="lbl">Menu</div>
+    <a href="#">Home</a>
+    <a href="#">Transactions</a>
+    <a href="#">Budget</a>
+    <a href="#" aria-current="page">Investments</a>
+    <a href="#">My Wealth</a>
+    <a href="#">Financial Fitness</a>
+    <a href="#sec-goals">Goals</a>
+    <a href="#sec-stmt">Statements</a>
+    <a href="#">Family Circle</a>
+    <a href="#">Debt</a>
+  </nav>
+
+  <main>
+    <div class="crumb">Investments</div>
+    <h2>My investments</h2>
+    <p class="sub"><span class="live"></span> <span id="asof">5 Sep 2026, 14:32</span> SAST · <span class="tip" tabindex="0">prices delayed 15 min<span class="tipbox">All security prices are delayed by up to 15 minutes and are indicative, not dealable. Portfolio values use each fund's most recent daily net asset value.</span></span></p>
+
+    <div class="tv">
+      <div class="tv-top">
+        <div class="tv-lab">Total value</div>
+        <div class="tv-big num">ZAR 1,246,546</div>
+        <div class="tv-rate"><span class="tip" tabindex="0">USDZAR 18.42<span class="tipbox">Refinitiv mid, refreshed with prices. A display rate — used to convert values, never to state a return. Actual conversions use the dealt rate.</span></span></div>
+      </div>
+      <div class="tv-split">
+        <div class="tv-cell">
+          <div class="k">Invested</div>
+          <div class="v num">ZAR 1,215,152</div>
+          <div class="p">97.5% · 2 portfolios, 3 securities</div>
+          <div class="bar"><i style="width:97.5%;background:var(--brand)"></i></div>
+        </div>
+        <div class="tv-cell">
+          <div class="k">Profit &amp; loss</div>
+          <div class="v num gain">+ZAR 162,945</div>
+          <div class="p"><b class="gain">+15.5%</b> · <span class="tip" tabindex="0">gain on cost<span class="tipbox">Invested value against what you paid. <b>Wallet cash is excluded</b> — it counts in Total value but earns no gain. The dollar leg is converted at today's rate, so this carries currency movement as well as investment performance. Each currency's own P&amp;L is shown unconverted in its group below.</span></span></div>
+        </div>
+        <div class="tv-cell">
+          <button class="tv-btn" data-toggle="d-wallets" aria-expanded="false">
+            <span class="chev">▶</span>
+            <span class="k">Available to invest</span>
+            <span class="v num">ZAR 31,393</span>
+            <span class="p">2.5% · <span class="tip" tabindex="0">wallet cash<span class="tipbox">Portfolio cash sleeves sit inside a portfolio, count in its value and its return, and are <b>not</b> available to invest.</span></span></span>
+          </button>
+        </div>
+      </div>
+      <div class="wal" id="d-wallets" hidden>
+        <div class="wal-row">
+          <span>🇿🇦</span>
+          <span class="wal-n">South Africa wallet</span>
+          <span class="ref tip" tabindex="0">ZAR-WLT-100482<span class="tipbox">Held at ABSA Bank.</span></span>
+          <span class="wal-v num">ZAR 9,986</span>
+          <button class="btn sm">Top up</button><button class="btn sm ghost">Withdraw</button>
+        </div>
+        <div class="wal-row">
+          <span>🌐</span>
+          <span class="wal-n">Global wallet</span>
+          <span class="ref tip" tabindex="0">USD-WLT-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
+          <span class="wal-v num">USD 1,162</span>
+          <button class="btn sm">Top up</button><button class="btn sm ghost">Withdraw</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SOUTH AFRICA ================= -->
+    <div class="grp">
+      <div class="grp-head">
+        <span>🇿🇦</span>
+        <span class="grp-name">South Africa</span>
+        <span class="grp-tot num">ZAR 285,308</span>
+      </div>
+      <div class="avail">
+        <span class="k">Wallet · available to invest</span>
+        <span class="v num">ZAR 9,986</span>
+        <span class="ref tip" tabindex="0">ZAR-WLT-100482<span class="tipbox">Held at ABSA Bank.</span></span>
+        <button class="btn sm">Top up</button>
+      </div>
+
+      <div class="acct">
+        <div class="acct-head">
+          <span class="acct-name">Managed account</span>
+          <span class="badge b-adv">Advised</span>
+          <span class="ref tip" tabindex="0">ZAR-MAN-100482<span class="tipbox">Held at ABSA Bank.</span></span>
+          <span class="acct-val num">ZAR 275,322</span>
+        </div>
+        <div class="row">
+          <div class="rowline">
+            <button class="rowgrid" data-toggle="d-sam" aria-expanded="false">
+              <span class="chev">▶</span>
+              <span>
+                <span class="r-name">SA Momentum</span>
+                <span class="r-sub">Risk profile · Growth</span>
+              </span>
+              <span class="r-goal"><span class="chip chip-goal">🎯 Gabi Education</span></span>
+              <span class="r-val"><span class="v num">R275,322</span><br><span class="c num">cost R249,966</span></span>
+              <span class="r-pl gain"><span class="num">+R25,355</span><br><span class="pct num">+10.1%</span></span>
+            </button>
+            <span class="acts">
+              <button class="btn sm" data-modal="sam-buy">Buy More</button>
+              <button class="btn sm ghost" data-modal="sam-sell">Sell</button>
+            </span>
+          </div>
+
+          <div class="dr" id="d-sam" hidden>
+            <div class="card">
+              <h4>Holdings<small>Names, tickers, ISINs and fund TERs from the Investment Management database.</small></h4>
+              <table class="fit">
+                <thead><tr><th>Holding</th><th>Weight</th><th>Value</th><th>You paid</th><th>Profit &amp; loss</th></tr></thead>
+                <tbody>
+                  <tr><td class="nm"><span class="hn">10X Total World Stock Feeder ETF</span><span class="dsc">GLOBAL · ZAE000297776 · TER 0.3%</span></td><td class="num">26.4%</td><td class="num">R72,740</td><td class="num">R60,546</td><td class="num gain">+R12,194</td></tr>
+                  <tr><td class="nm"><span class="hn">10X Wealth Next 40 Equal Weighted</span><span class="dsc">WNXT40 · ZAE000320784 · TER 0.4%</span></td><td class="num">15.3%</td><td class="num">R42,030</td><td class="num">R41,995</td><td class="num gain">+R35</td></tr>
+                  <tr><td class="nm"><span class="hn">10X Wealth Top 20 Capped</span><span class="dsc">WTOP20 · ZAE000320792 · TER 0.3%</span></td><td class="num">14.8%</td><td class="num">R40,718</td><td class="num">R39,711</td><td class="num gain">+R1,007</td></tr>
+                  <tr><td class="nm"><span class="hn">10X Wealth GOVI Bond ETF</span><span class="dsc">CSGOVI · ZAE000316162 · TER 0.3%</span></td><td class="num">14.4%</td><td class="num">R39,588</td><td class="num">R36,283</td><td class="num gain">+R3,305</td></tr>
+                  <tr><td class="nm"><span class="hn">10X All Asia AMETF</span><span class="dsc">APACXJ · ZAE000322483 · TER 0.6%</span></td><td class="num">14.2%</td><td class="num">R39,192</td><td class="num">R31,168</td><td class="num gain">+R8,025</td></tr>
+                  <tr><td class="nm"><span class="hn">Ninety One Diversified Income Prescient Feeder AMETF</span><span class="dsc">91DINC · ZAE000347043</span></td><td class="num">7.1%</td><td class="num">R19,571</td><td class="num">R19,089</td><td class="num gain">+R482</td></tr>
+                  <tr><td class="nm"><span class="hn">Prescient Income Provider Feeder AMETF</span><span class="dsc">PIPETF · ZAE000328407 · TER 0.5%</span></td><td class="num">6.9%</td><td class="num">R18,889</td><td class="num">R18,581</td><td class="num gain">+R307</td></tr>
+                  <tr class="cash"><td class="nm"><span class="hn">STeFI Call Deposit ZAR</span><span class="dsc"><span class="tip" tabindex="0">portfolio cash<span class="tipbox">Part of the portfolio's value and its return, earning 7.3% a year. Not the same as your wallet, and not available to invest.</span></span></span></td><td class="num">0.9%</td><td class="num">R2,593</td><td class="num">R2,593</td><td class="num">—</td></tr>
+                  <tr class="tot"><td>Portfolio</td><td class="num">100.0%</td><td class="num">R275,322</td><td class="num">R249,966</td><td class="num gain">+R25,355</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">Rounded — columns may differ from their total by a unit.</p>
+            </div>
+
+            <div class="card">
+              <div class="chart-head">
+                <span class="ctitle">Performance</span>
+                <span class="ranges" data-chart="sam">
+                  <button data-per="1M" aria-pressed="false">1M</button><button data-per="3M" aria-pressed="false">3M</button>
+                  <button data-per="6M" aria-pressed="false">6M</button><button data-per="1Y" aria-pressed="false">1Y</button>
+                  <button data-per="MAX" aria-pressed="true">MAX</button>
+                </span>
+              </div>
+              <div class="retline">
+                <span class="ret num gain" id="ret-sam-money">+R25,355</span>
+                <span class="ret-pct num gain" id="ret-sam-pct">+10.1%</span>
+                <span class="ret-note"><span class="tip" tabindex="0">what you earned<span class="tipbox">The gap between what the portfolio is worth and what you put into it, over the period selected. MAX is since you first invested, and equals the profit and loss shown on the row.</span></span></span>
+              </div>
+              <div class="pchart" id="ch-sam"></div>
+              <div class="legend">
+                <span><i style="background:var(--accent)"></i>What it's worth</span>
+                <span><i class="dash"></i>What you put in</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4>Total Income and Costs<small>Quarter to date · income is swept to your ZAR wallet, which is why it counts as money out of the account.</small></h4>
+              <div class="kv">
+                <div><div class="k">Income received</div><div class="v num">R2,933.34</div></div>
+                <div><div class="k">Tax withheld</div><div class="v num">R258.19</div></div>
+                <div><div class="k">Net to wallet</div><div class="v num gain">R2,675.15</div></div>
+                <div><div class="k">Costs</div><div class="v num loss">R349.42<small>incl. R45.57 VAT</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <h5>Income</h5>
+              <table class="fit sm">
+                <thead><tr><th>Paid</th><th>Ex date</th><th>Holding</th><th>Gross</th><th>Tax withheld</th><th>Net swept</th></tr></thead>
+                <tbody>
+                  <tr><td>2 Apr</td><td>31 Mar</td><td class="nm"><span class="tk">CSGOVI</span><span class="dsc">interest, paid gross</span></td><td class="num">R784.11</td><td class="num">R0.00</td><td class="num">R784.11</td></tr>
+                  <tr><td>2 Apr</td><td>31 Mar</td><td class="nm"><span class="tk">GLOBAL</span><span class="dsc">SA dividends tax</span></td><td class="num">R481.18</td><td class="num">R96.24 <span class="pcell">20%</span></td><td class="num">R384.94</td></tr>
+                  <tr><td>2 Apr</td><td>31 Mar</td><td class="nm"><span class="tk">WTOP20</span><span class="dsc">SA dividends tax</span></td><td class="num">R439.81</td><td class="num">R87.96 <span class="pcell">20%</span></td><td class="num">R351.85</td></tr>
+                  <tr><td>2 Apr</td><td>31 Mar</td><td class="nm"><span class="tk">WNXT40</span><span class="dsc">SA dividends tax</span></td><td class="num">R369.96</td><td class="num">R73.99 <span class="pcell">20%</span></td><td class="num">R295.97</td></tr>
+                  <tr><td>2 Apr</td><td>31 Mar</td><td class="nm"><span class="tk">91DINC</span><span class="dsc">interest, paid gross</span></td><td class="num">R317.90</td><td class="num">R0.00</td><td class="num">R317.90</td></tr>
+                  <tr><td>2 Apr</td><td>1 Apr</td><td class="nm"><span class="tk">PIPETF</span><span class="dsc">interest, paid gross</span></td><td class="num">R81.96</td><td class="num">R0.00</td><td class="num">R81.96</td></tr>
+                  <tr><td>4 May</td><td>1 May</td><td class="nm"><span class="tk">PIPETF</span><span class="dsc">interest, paid gross</span></td><td class="num">R104.67</td><td class="num">R0.00</td><td class="num">R104.67</td></tr>
+                  <tr><td>2 Jun</td><td>1 Jun</td><td class="nm"><span class="tk">PIPETF</span><span class="dsc">interest, paid gross</span></td><td class="num">R305.25</td><td class="num">R0.00</td><td class="num">R305.25</td></tr>
+                  <tr class="cash"><td>30 Apr</td><td>—</td><td class="nm"><span class="tk">CASH</span><span class="dsc">7.25%/yr · 29 days on R2,780.01</span></td><td class="num">R16.01</td><td class="num">—</td><td class="num">R16.01</td></tr>
+                  <tr class="cash"><td>29 May</td><td>—</td><td class="nm"><span class="tk">CASH</span><span class="dsc">7.25%/yr · 29 days on R2,780.01</span></td><td class="num">R16.01</td><td class="num">—</td><td class="num">R16.01</td></tr>
+                  <tr class="cash"><td>30 Jun</td><td>—</td><td class="nm"><span class="tk">CASH</span><span class="dsc">7.25%/yr · 32 days on R2,593.15</span></td><td class="num">R16.48</td><td class="num">—</td><td class="num">R16.48</td></tr>
+                  <tr class="tot"><td>Total</td><td></td><td></td><td class="num">R2,933.34</td><td class="num">R258.19</td><td class="num">R2,675.15</td></tr>
+                </tbody>
+              </table>
+              <div class="hr"></div>
+              <h5>Costs</h5>
+              <table class="fit sm">
+                <thead><tr><th>Date</th><th>Fee</th><th>Rate</th><th>Charged on</th><th>Fee</th><th>VAT 15%</th><th>Total</th></tr></thead>
+                <tbody>
+                  <tr><td>22 Apr</td><td>Advice fee</td><td class="num">0.5% once</td><td class="num">R40,000.00</td><td class="num">R204.00</td><td class="num">R30.60</td><td class="num">R234.60</td></tr>
+                  <tr><td>30 Apr</td><td>Custody fee</td><td class="num">0.1% month</td><td class="num">R289,787.34</td><td class="num">R33.81</td><td class="num">R5.07</td><td class="num">R38.88</td></tr>
+                  <tr><td>29 May</td><td>Custody fee</td><td class="num">0.1% month</td><td class="num">R293,310.39</td><td class="num">R34.22</td><td class="num">R5.13</td><td class="num">R39.35</td></tr>
+                  <tr><td>30 Jun</td><td>Custody fee</td><td class="num">0.1% month</td><td class="num">R272,728.50</td><td class="num">R31.82</td><td class="num">R4.77</td><td class="num">R36.59</td></tr>
+                  <tr class="tot"><td>Total</td><td></td><td></td><td></td><td class="num">R303.85</td><td class="num">R45.57</td><td class="num">R349.42</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">Fees are debited from your ZAR wallet, not from the portfolio. <b>Brokerage of R57.37, including R7.48 VAT, was charged inside the orders</b> — it is already in what you paid for your holdings and is never billed to your wallet. Your Premium subscription is charged once for the whole account and is shown under Wallet activity.</p>
+            </div>
+
+            <div class="card">
+              <div class="chart-head">
+                <span class="ctitle">Transactions</span>
+                <span class="txctl">
+                  <select class="sel" data-tx="sam" aria-label="Filter transactions by period">
+                    <option value="30" selected>Last month</option>
+                    <option value="90">Last 3 months</option>
+                    <option value="180">Last 6 months</option>
+                    <option value="365">Last 12 months</option>
+                    <option value="ytd">Year to date</option>
+                    <option value="all">All</option>
+                    <option value="custom">Custom range…</option>
+                  </select>
+                  <span class="custom" hidden>
+                    <input type="date" class="sel" data-from="sam" value="2026-04-01" aria-label="From date">
+                    <input type="date" class="sel" data-to="sam" value="2026-09-06" aria-label="To date">
+                  </span>
+                </span>
+              </div>
+              <table class="fit sm" data-txtable="sam">
+                <thead><tr><th>Date</th><th>Activity</th><th>Orders</th><th>Consideration</th><th>Brokerage</th><th>Cash effect</th></tr></thead>
+                <tbody>
+                  <tr data-d="2026-09-01"><td>1 Sep 2026</td><td>Buy · debit order</td><td class="num">7</td><td class="num">R2,488.42</td><td class="num">R11.58</td><td class="num">−R2,500.00</td></tr>
+                  <tr data-d="2026-08-03"><td>3 Aug 2026</td><td>Buy · debit order</td><td class="num">7</td><td class="num">R2,488.42</td><td class="num">R11.58</td><td class="num">−R2,500.00</td></tr>
+                  <tr data-d="2026-07-01"><td>1 Jul 2026</td><td>Buy · debit order</td><td class="num">7</td><td class="num">R2,488.42</td><td class="num">R11.58</td><td class="num">−R2,500.00</td></tr>
+                  <tr data-d="2026-06-05"><td>5 Jun 2026</td><td>Sell · partial withdrawal</td><td class="num">7</td><td class="num">R20,092.63</td><td class="num">R92.63</td><td class="num gain">+R20,000.00</td></tr>
+                  <tr data-d="2026-04-22"><td>22 Apr 2026</td><td>Buy · lump sum</td><td class="num">7</td><td class="num">R39,814.00</td><td class="num">R186.00</td><td class="num">−R40,000.00</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">One instruction to the portfolio is split into one market order per fund. <b>Brokerage is charged inside each order</b>, so the cash effect is the whole amount you instructed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acct-head acct-foot">
+        <span class="gsum">South Africa invested <b class="num">ZAR 275,322</b> · <b class="num gain">+ZAR 25,355</b> <span class="num gain">+10.1%</span></span>
+        <span class="acts" style="margin-left:auto">
+          <button class="btn sm ghost">+ Add a portfolio</button>
+          <button class="btn sm ghost">+ Buy a security</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- ================= GLOBAL ================= -->
+    <div class="grp">
+      <div class="grp-head">
+        <span>🌐</span>
+        <span class="grp-name">Global</span>
+        <span class="grp-tot num">USD 52,184</span>
+      </div>
+      <div class="avail">
+        <span class="k">Wallet · available to invest</span>
+        <span class="v num">USD 1,162</span>
+        <span class="ref tip" tabindex="0">USD-WLT-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
+        <button class="btn sm">Top up</button>
+      </div>
+
+      <div class="acct">
+        <div class="acct-head">
+          <span class="acct-name">Managed account</span>
+          <span class="badge b-adv">Advised</span>
+          <span class="ref tip" tabindex="0">USD-MAN-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
+          <span class="acct-val num">USD 48,560</span>
+        </div>
+        <div class="row">
+          <div class="rowline">
+            <button class="rowgrid" data-toggle="d-gc" aria-expanded="false">
+              <span class="chev">▶</span>
+              <span>
+                <span class="r-name">Global Core</span>
+                <span class="r-sub">Risk profile · Balanced</span>
+              </span>
+              <span class="r-goal"><span class="chip chip-goal">🎯 Retirement</span></span>
+              <span class="r-val"><span class="v num">$48,560</span><br><span class="c num">cost $41,224</span></span>
+              <span class="r-pl gain"><span class="num">+$7,336</span><br><span class="pct num">+17.8%</span></span>
+            </button>
+            <span class="acts">
+              <button class="btn sm" data-modal="gc-buy">Buy More</button>
+              <button class="btn sm ghost" data-modal="gc-sell">Sell</button>
+            </span>
+          </div>
+
+          <div class="dr" id="d-gc" hidden>
+            <div class="card">
+              <h4>Holdings</h4>
+              <table class="fit">
+                <thead><tr><th>Holding</th><th>Weight</th><th>Value</th><th>You paid</th><th>Profit &amp; loss</th></tr></thead>
+                <tbody>
+                  <tr><td class="nm"><span class="hn">iShares MSCI ACWI ETF</span><span class="dsc">ACWI · US4642882579 · TER 0.3%</span></td><td class="num">72.2%</td><td class="num">$35,076</td><td class="num">$28,002</td><td class="num gain">+$7,073</td></tr>
+                  <tr><td class="nm"><span class="hn">iShares Core International Aggregate Bond ETF</span><span class="dsc">IAGG · US46435G6724 · TER 0.1%</span></td><td class="num">16.3%</td><td class="num">$7,934</td><td class="num">$7,724</td><td class="num gain">+$210</td></tr>
+                  <tr><td class="nm"><span class="hn">iShares Core U.S. Aggregate Bond ETF</span><span class="dsc">AGG · US4642872265 · TER 0.0%</span></td><td class="num">10.5%</td><td class="num">$5,107</td><td class="num">$5,054</td><td class="num gain">+$53</td></tr>
+                  <tr class="cash"><td class="nm"><span class="hn">USD cash sweep</span><span class="dsc"><span class="tip" tabindex="0">portfolio cash<span class="tipbox">Alpaca sweep account. Part of the portfolio's value and its return, earning 3.9% a year. Not the same as your wallet, and not available to invest.</span></span></span></td><td class="num">0.9%</td><td class="num">$444</td><td class="num">$444</td><td class="num">—</td></tr>
+                  <tr class="tot"><td>Portfolio</td><td class="num">100.0%</td><td class="num">$48,560</td><td class="num">$41,224</td><td class="num gain">+$7,336</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">Rounded — weights sum to 99.9% and the value column to $48,561.</p>
+            </div>
+
+            <div class="card">
+              <div class="chart-head">
+                <span class="ctitle">Performance</span>
+                <span class="ranges" data-chart="gc">
+                  <button data-per="1M" aria-pressed="false">1M</button><button data-per="3M" aria-pressed="false">3M</button>
+                  <button data-per="6M" aria-pressed="false">6M</button><button data-per="1Y" aria-pressed="false">1Y</button>
+                  <button data-per="MAX" aria-pressed="true">MAX</button>
+                </span>
+              </div>
+              <div class="retline">
+                <span class="ret num gain" id="ret-gc-money">+$7,336</span>
+                <span class="ret-pct num gain" id="ret-gc-pct">+17.8%</span>
+                <span class="ret-note"><span class="tip" tabindex="0">what you earned<span class="tipbox">The gap between what the portfolio is worth and what you put into it, over the period selected. MAX is since you first invested, and equals the profit and loss shown on the row.</span></span></span>
+              </div>
+              <div class="pchart" id="ch-gc"></div>
+              <div class="legend">
+                <span><i style="background:var(--accent)"></i>What it's worth</span>
+                <span><i class="dash"></i>What you put in</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4>Total Income and Costs<small>Quarter to date · income is swept to your Global wallet, which is why it counts as money out of the account.</small></h4>
+              <div class="kv">
+                <div><div class="k">Income received</div><div class="v num">$307.61</div></div>
+                <div><div class="k">Tax withheld</div><div class="v num">$45.48</div></div>
+                <div><div class="k">Net to wallet</div><div class="v num gain">$262.13</div></div>
+                <div><div class="k">Costs</div><div class="v num loss">$40.47<small>incl. $5.28 VAT</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <h5>Income</h5>
+              <table class="fit sm">
+                <thead><tr><th>Paid</th><th>Ex date</th><th>Holding</th><th>Gross</th><th>Tax withheld</th><th>Net swept</th></tr></thead>
+                <tbody>
+                  <tr><td>18 Jun</td><td>15 Jun</td><td class="nm"><span class="tk">ACWI</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$224.28</td><td class="num">$33.64 <span class="pcell">15%</span></td><td class="num">$190.64</td></tr>
+                  <tr><td>7 Apr</td><td>1 Apr</td><td class="nm"><span class="tk">IAGG</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$27.21</td><td class="num">$4.08 <span class="pcell">15%</span></td><td class="num">$23.13</td></tr>
+                  <tr><td>4 Jun</td><td>1 Jun</td><td class="nm"><span class="tk">AGG</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$18.07</td><td class="num">$2.71 <span class="pcell">15%</span></td><td class="num">$15.36</td></tr>
+                  <tr><td>6 May</td><td>1 May</td><td class="nm"><span class="tk">AGG</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$17.87</td><td class="num">$2.68 <span class="pcell">15%</span></td><td class="num">$15.19</td></tr>
+                  <tr><td>7 Apr</td><td>1 Apr</td><td class="nm"><span class="tk">AGG</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$15.80</td><td class="num">$2.37 <span class="pcell">15%</span></td><td class="num">$13.43</td></tr>
+                  <tr class="cash"><td>30 Jun</td><td>—</td><td class="nm"><span class="tk">CASH</span><span class="dsc">3.90%/yr · 32 days on $440.50</span></td><td class="num">$1.51</td><td class="num">—</td><td class="num">$1.51</td></tr>
+                  <tr class="cash"><td>29 May</td><td>—</td><td class="nm"><span class="tk">CASH</span><span class="dsc">3.90%/yr · 29 days on $465.56</span></td><td class="num">$1.44</td><td class="num">—</td><td class="num">$1.44</td></tr>
+                  <tr class="cash"><td>30 Apr</td><td>—</td><td class="nm"><span class="tk">CASH</span><span class="dsc">3.90%/yr · 29 days on $462.56</span></td><td class="num">$1.43</td><td class="num">—</td><td class="num">$1.43</td></tr>
+                  <tr class="tot"><td>Total</td><td></td><td></td><td class="num">$307.61</td><td class="num">$45.48</td><td class="num">$262.13</td></tr>
+                </tbody>
+              </table>
+              <div class="hr"></div>
+              <h5>Costs</h5>
+              <table class="fit sm">
+                <thead><tr><th>Date</th><th>Fee</th><th>Rate</th><th>Charged on</th><th>Fee</th><th>VAT 15%</th><th>Total</th></tr></thead>
+                <tbody>
+                  <tr><td>15 Apr</td><td>Advice fee</td><td class="num">0.5% once</td><td class="num">$6,000.00</td><td class="num">$30.60</td><td class="num">$4.59</td><td class="num">$35.19</td></tr>
+                  <tr><td>30 Apr</td><td>Advice fee</td><td class="num">0.5% once</td><td class="num">$300.00</td><td class="num">$1.53</td><td class="num">$0.23</td><td class="num">$1.76</td></tr>
+                  <tr><td>29 May</td><td>Advice fee</td><td class="num">0.5% once</td><td class="num">$300.00</td><td class="num">$1.53</td><td class="num">$0.23</td><td class="num">$1.76</td></tr>
+                  <tr><td>30 Jun</td><td>Advice fee</td><td class="num">0.5% once</td><td class="num">$300.00</td><td class="num">$1.53</td><td class="num">$0.23</td><td class="num">$1.76</td></tr>
+                  <tr class="tot"><td>Total</td><td></td><td></td><td></td><td class="num">$35.19</td><td class="num">$5.28</td><td class="num">$40.47</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">There is no custody fee on the dollar account. Fees are debited from your Global wallet, not from the portfolio. <b>Brokerage of $18.81, including $2.45 VAT, was charged inside the orders</b> — already in what you paid for your holdings, never billed to your wallet.</p>
+            </div>
+
+            <div class="card">
+              <div class="chart-head">
+                <span class="ctitle">Transactions</span>
+                <span class="txctl">
+                  <select class="sel" data-tx="gc" aria-label="Filter transactions by period">
+                    <option value="30" selected>Last month</option>
+                    <option value="90">Last 3 months</option>
+                    <option value="180">Last 6 months</option>
+                    <option value="365">Last 12 months</option>
+                    <option value="ytd">Year to date</option>
+                    <option value="all">All</option>
+                    <option value="custom">Custom range…</option>
+                  </select>
+                  <span class="custom" hidden>
+                    <input type="date" class="sel" data-from="gc" value="2026-04-01" aria-label="From date">
+                    <input type="date" class="sel" data-to="gc" value="2026-09-06" aria-label="To date">
+                  </span>
+                </span>
+              </div>
+              <table class="fit sm" data-txtable="gc">
+                <thead><tr><th>Date</th><th>Activity</th><th>Orders</th><th>Consideration</th><th>Brokerage</th><th>Cash effect</th></tr></thead>
+                <tbody>
+                  <tr data-d="2026-08-31"><td>31 Aug 2026</td><td>Buy · debit order</td><td class="num">3</td><td class="num">$297.00</td><td class="num">$3.00</td><td class="num">−$300.00</td></tr>
+                  <tr data-d="2026-07-31"><td>31 Jul 2026</td><td>Buy · debit order</td><td class="num">3</td><td class="num">$297.00</td><td class="num">$3.00</td><td class="num">−$300.00</td></tr>
+                  <tr data-d="2026-06-30"><td>30 Jun 2026</td><td>Buy · debit order</td><td class="num">3</td><td class="num">$297.00</td><td class="num">$3.00</td><td class="num">−$300.00</td></tr>
+                  <tr data-d="2026-06-10"><td>10 Jun 2026</td><td>Sell · partial withdrawal</td><td class="num">3</td><td class="num">$3,004.50</td><td class="num">$4.50</td><td class="num gain">+$3,000.00</td></tr>
+                  <tr data-d="2026-05-29"><td>29 May 2026</td><td>Buy · debit order</td><td class="num">3</td><td class="num">$297.00</td><td class="num">$3.00</td><td class="num">−$300.00</td></tr>
+                  <tr data-d="2026-04-30"><td>30 Apr 2026</td><td>Buy · debit order</td><td class="num">3</td><td class="num">$297.00</td><td class="num">$3.00</td><td class="num">−$300.00</td></tr>
+                  <tr data-d="2026-04-15"><td>15 Apr 2026</td><td>Buy · lump sum</td><td class="num">3</td><td class="num">$5,991.11</td><td class="num">$8.89</td><td class="num">−$6,000.00</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">One instruction to the portfolio is split into one market order per fund. <b>Brokerage is charged inside each order</b>, so the cash effect is the whole amount you instructed.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acct">
+        <div class="acct-head">
+          <span class="acct-name">Execution-only account</span>
+          <span class="badge b-exo">No advice</span>
+          <span class="ref tip" tabindex="0">USD-EXO-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
+          <span class="acct-val num">USD 2,463</span>
+        </div>
+
+        <div class="row">
+          <div class="rowline">
+            <button class="rowgrid" data-toggle="d-aapl" aria-expanded="false">
+              <span class="chev">▶</span>
+              <span>
+                <span class="r-name"><span class="tk">AAPL</span>Apple Inc.</span>
+                <span class="r-sub">4 shares · avg $298.40 · NASDAQ</span>
+              </span>
+              <span class="r-goal"><span class="chip chip-none">+ attach a goal</span></span>
+              <span class="r-val"><span class="v num">$1,263</span><br><span class="c num">cost $1,194</span></span>
+              <span class="r-pl gain"><span class="num">+$69</span><br><span class="pct num">+5.8%</span></span>
+            </button>
+            <span class="acts">
+              <button class="btn sm" data-modal="aapl-buy">Buy More</button>
+              <button class="btn sm ghost" data-modal="aapl-sell">Sell</button>
+            </span>
+          </div>
+          <div class="dr" id="d-aapl" hidden>
+            <div class="card">
+              <div class="chart-head">
+                <span class="p num">$315.70</span>
+                <span class="as">delayed 15 min</span>
+                <span class="ranges" data-chart="aapl">
+                  <button data-per="1M" aria-pressed="false">1M</button><button data-per="3M" aria-pressed="false">3M</button>
+                  <button data-per="6M" aria-pressed="true">6M</button><button data-per="1Y" aria-pressed="false">1Y</button>
+                  <button data-per="MAX" aria-pressed="false">MAX</button>
+                </span>
+              </div>
+              <div class="pchart" id="ch-aapl"></div>
+              <div class="legend">
+                <span><i style="background:var(--accent)"></i>Share price</span>
+                <span><i class="dash amber"></i>Your average cost $298.40 — you are above it</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4>Your position<small>US0378331005 · NASDAQ</small></h4>
+              <div class="kv">
+                <div><div class="k">Shares</div><div class="v num">4</div></div>
+                <div><div class="k">Average cost</div><div class="v num">$298.40</div></div>
+                <div><div class="k">Last price</div><div class="v num">$315.70</div></div>
+                <div><div class="k">Value</div><div class="v num">$1,263</div></div>
+                <div><div class="k">You paid</div><div class="v num">$1,194</div></div>
+                <div><div class="k">Profit &amp; loss</div><div class="v num gain">+$69<small>+5.8% on cost</small></div></div>
+                <div><div class="k">In ZAR</div><div class="v num">R23,261<small>at 18.42, value only</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <div class="kv">
+                <div><div class="k">Risk profile · instrument</div><div class="v">Balanced</div></div>
+                <div><div class="k">Risk profile · yours</div><div class="v">Balanced</div></div>
+                <div><div class="k">Advice given</div><div class="v">None</div></div>
+                <div><div class="k">Advice fee</div><div class="v num">$0<small><span class="tip" tabindex="0">advised only<span class="tipbox">The advice fee is charged once on each amount invested through a managed portfolio. Execution-only orders carry brokerage only.</span></span></small></div></div>
+              </div>
+              <div class="dr-note exo" style="margin:13px 0 0">
+                <span>⚠</span>
+                <span><b>Bought without advice.</b> Vault22 has not assessed whether this suits you.</span>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4>Total Income and Costs<small>Quarter to date · dividends are swept to your Global wallet.</small></h4>
+              <div class="kv">
+                <div><div class="k">Income received</div><div class="v num">$3.84</div></div>
+                <div><div class="k">Tax withheld</div><div class="v num">$0.58</div></div>
+                <div><div class="k">Net to wallet</div><div class="v num gain">$3.26</div></div>
+                <div><div class="k">Costs</div><div class="v num loss">$3.45<small>brokerage incl. $0.45 VAT</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <table class="fit sm">
+                <thead><tr><th>Paid</th><th>Ex date</th><th>Holding</th><th>Gross</th><th>Tax withheld</th><th>Net swept</th></tr></thead>
+                <tbody>
+                  <tr><td>14 Aug</td><td>10 Aug</td><td class="nm"><span class="tk">AAPL</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$2.56</td><td class="num">$0.38 <span class="pcell">15%</span></td><td class="num">$2.18</td></tr>
+                  <tr><td>15 May</td><td>11 May</td><td class="nm"><span class="tk">AAPL</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$1.28</td><td class="num">$0.20 <span class="pcell">15%</span></td><td class="num">$1.08</td></tr>
+                  <tr class="tot"><td>Total</td><td></td><td></td><td class="num">$3.84</td><td class="num">$0.58</td><td class="num">$3.26</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">No advice fee applies to an execution-only order. <b>Brokerage of $3.00, plus $0.45 VAT, was charged inside the orders</b> — already in what you paid, never billed to your wallet.</p>
+            </div>
+
+            <div class="card">
+              <div class="chart-head">
+                <span class="ctitle">Transactions</span>
+                <span class="txctl">
+                  <select class="sel" data-tx="aapl" aria-label="Filter transactions by period">
+                    <option value="30" selected>Last month</option>
+                    <option value="90">Last 3 months</option>
+                    <option value="180">Last 6 months</option>
+                    <option value="365">Last 12 months</option>
+                    <option value="ytd">Year to date</option>
+                    <option value="all">All</option>
+                    <option value="custom">Custom range…</option>
+                  </select>
+                  <span class="custom" hidden>
+                    <input type="date" class="sel" data-from="aapl" value="2026-04-01" aria-label="From date">
+                    <input type="date" class="sel" data-to="aapl" value="2026-09-06" aria-label="To date">
+                  </span>
+                </span>
+              </div>
+              <table class="fit sm" data-txtable="aapl">
+                <thead><tr><th>Date</th><th>Activity</th><th>Shares</th><th>Price</th><th>Brokerage</th><th>Cash effect</th></tr></thead>
+                <tbody>
+                  <tr data-d="2026-08-29"><td>29 Aug 2026</td><td>Buy</td><td class="num">1.0</td><td class="num">$312.50</td><td class="num">$1.00</td><td class="num">−$313.50</td></tr>
+                  <tr data-d="2026-06-12"><td>12 Jun 2026</td><td>Buy</td><td class="num">1.5</td><td class="num">$296.10</td><td class="num">$1.00</td><td class="num">−$445.15</td></tr>
+                  <tr data-d="2026-04-15"><td>15 Apr 2026</td><td>Buy</td><td class="num">1.5</td><td class="num">$289.30</td><td class="num">$1.00</td><td class="num">−$434.95</td></tr>
+                  <tr class="tot" data-d="all"><td>Total paid</td><td></td><td class="num">4.0</td><td class="num">avg $298.40</td><td class="num">$3.00</td><td class="num">−$1,193.60</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="rowline">
+            <button class="rowgrid" data-toggle="d-msft" aria-expanded="false">
+              <span class="chev">▶</span>
+              <span>
+                <span class="r-name"><span class="tk">MSFT</span>Microsoft Corporation</span>
+                <span class="r-sub">1.5 shares · avg $486.20 · NASDAQ</span>
+              </span>
+              <span class="r-goal"><span class="chip chip-none">+ attach a goal</span></span>
+              <span class="r-val"><span class="v num">$752</span><br><span class="c num">cost $729</span></span>
+              <span class="r-pl gain"><span class="num">+$22</span><br><span class="pct num">+3.1%</span></span>
+            </button>
+            <span class="acts">
+              <button class="btn sm" data-modal="msft-buy">Buy More</button>
+              <button class="btn sm ghost" data-modal="msft-sell">Sell</button>
+            </span>
+          </div>
+          <div class="dr" id="d-msft" hidden>
+            <div class="card">
+              <div class="chart-head">
+                <span class="p num">$501.15</span>
+                <span class="as">delayed 15 min</span>
+                <span class="ranges" data-chart="msft">
+                  <button data-per="1M" aria-pressed="false">1M</button><button data-per="3M" aria-pressed="false">3M</button>
+                  <button data-per="6M" aria-pressed="true">6M</button><button data-per="1Y" aria-pressed="false">1Y</button>
+                  <button data-per="MAX" aria-pressed="false">MAX</button>
+                </span>
+              </div>
+              <div class="pchart" id="ch-msft"></div>
+              <div class="legend">
+                <span><i style="background:var(--accent)"></i>Share price</span>
+                <span><i class="dash amber"></i>Your average cost $486.20 — you are above it</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Your position<small>US5949181045 · NASDAQ</small></h4>
+              <div class="kv">
+                <div><div class="k">Shares</div><div class="v num">1.5</div></div>
+                <div><div class="k">Average cost</div><div class="v num">$486.20</div></div>
+                <div><div class="k">Last price</div><div class="v num">$501.15</div></div>
+                <div><div class="k">Value</div><div class="v num">$752</div></div>
+                <div><div class="k">You paid</div><div class="v num">$729</div></div>
+                <div><div class="k">Profit &amp; loss</div><div class="v num gain">+$22<small>+3.1% on cost</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <div class="kv">
+                <div><div class="k">Risk profile · instrument</div><div class="v">Balanced</div></div>
+                <div><div class="k">Risk profile · yours</div><div class="v">Balanced</div></div>
+                <div><div class="k">Advice given</div><div class="v">None</div></div>
+                <div><div class="k">Advice fee</div><div class="v num">$0</div></div>
+              </div>
+              <div class="dr-note exo" style="margin:13px 0 0">
+                <span>⚠</span>
+                <span><b>Bought without advice.</b> Vault22 has not assessed whether this suits you.</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Total Income and Costs<small>Quarter to date</small></h4>
+              <div class="kv">
+                <div><div class="k">Income received</div><div class="v num">$1.24</div></div>
+                <div><div class="k">Tax withheld</div><div class="v num">$0.19</div></div>
+                <div><div class="k">Net to wallet</div><div class="v num gain">$1.05</div></div>
+                <div><div class="k">Costs</div><div class="v num loss">$1.15<small>brokerage incl. $0.15 VAT</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <table class="fit sm">
+                <thead><tr><th>Paid</th><th>Ex date</th><th>Holding</th><th>Gross</th><th>Tax withheld</th><th>Net swept</th></tr></thead>
+                <tbody>
+                  <tr><td>11 Jun</td><td>21 May</td><td class="nm"><span class="tk">MSFT</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$1.24</td><td class="num">$0.19 <span class="pcell">15%</span></td><td class="num">$1.05</td></tr>
+                  <tr class="tot"><td>Total</td><td></td><td></td><td class="num">$1.24</td><td class="num">$0.19</td><td class="num">$1.05</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">No advice fee applies to an execution-only order. Brokerage is charged inside the order.</p>
+            </div>
+            <div class="card">
+              <div class="chart-head">
+                <span class="ctitle">Transactions</span>
+                <span class="txctl">
+                  <select class="sel" data-tx="msft" aria-label="Filter transactions by period">
+                    <option value="30" selected>Last month</option>
+                    <option value="90">Last 3 months</option>
+                    <option value="180">Last 6 months</option>
+                    <option value="365">Last 12 months</option>
+                    <option value="ytd">Year to date</option>
+                    <option value="all">All</option>
+                    <option value="custom">Custom range…</option>
+                  </select>
+                  <span class="custom" hidden>
+                    <input type="date" class="sel" data-from="msft" value="2026-04-01" aria-label="From date">
+                    <input type="date" class="sel" data-to="msft" value="2026-09-06" aria-label="To date">
+                  </span>
+                </span>
+              </div>
+              <table class="fit sm" data-txtable="msft">
+                <thead><tr><th>Date</th><th>Activity</th><th>Shares</th><th>Price</th><th>Brokerage</th><th>Cash effect</th></tr></thead>
+                <tbody>
+                  <tr data-d="2026-08-26"><td>26 Aug 2026</td><td>Buy</td><td class="num">1.5</td><td class="num">$485.53</td><td class="num">$1.00</td><td class="num">−$729.30</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="rowline">
+            <button class="rowgrid" data-toggle="d-aa" aria-expanded="false">
+              <span class="chev">▶</span>
+              <span>
+                <span class="r-name"><span class="tk">AA</span>Alcoa Corporation</span>
+                <span class="r-sub">9 shares · avg $45.10 · NYSE Arca</span>
+              </span>
+              <span class="r-goal"><span class="chip chip-none">+ attach a goal</span></span>
+              <span class="r-val"><span class="v num">$448</span><br><span class="c num">cost $406</span></span>
+              <span class="r-pl gain"><span class="num">+$42</span><br><span class="pct num">+10.4%</span></span>
+            </button>
+            <span class="acts">
+              <button class="btn sm" data-modal="aa-buy">Buy More</button>
+              <button class="btn sm ghost" data-modal="aa-sell">Sell</button>
+            </span>
+          </div>
+          <div class="dr" id="d-aa" hidden>
+            <div class="card">
+              <div class="chart-head">
+                <span class="p num">$49.79</span>
+                <span class="as">delayed 15 min</span>
+                <span class="ranges" data-chart="aa">
+                  <button data-per="1M" aria-pressed="false">1M</button><button data-per="3M" aria-pressed="false">3M</button>
+                  <button data-per="6M" aria-pressed="true">6M</button><button data-per="1Y" aria-pressed="false">1Y</button>
+                  <button data-per="MAX" aria-pressed="false">MAX</button>
+                </span>
+              </div>
+              <div class="pchart" id="ch-aa"></div>
+              <div class="legend">
+                <span><i style="background:var(--accent)"></i>Share price</span>
+                <span><i class="dash amber"></i>Your average cost $45.10 — you are above it</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Your position<small>US0138721065 · NYSE Arca</small></h4>
+              <div class="kv">
+                <div><div class="k">Shares</div><div class="v num">9</div></div>
+                <div><div class="k">Average cost</div><div class="v num">$45.10</div></div>
+                <div><div class="k">Last price</div><div class="v num">$49.79</div></div>
+                <div><div class="k">Value</div><div class="v num">$448</div></div>
+                <div><div class="k">You paid</div><div class="v num">$406</div></div>
+                <div><div class="k">Profit &amp; loss</div><div class="v num gain">+$42<small>+10.4% on cost</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <div class="kv">
+                <div><div class="k">Risk profile · instrument</div><div class="v">Balanced</div></div>
+                <div><div class="k">Risk profile · yours</div><div class="v">Balanced</div></div>
+                <div><div class="k">Advice given</div><div class="v">None</div></div>
+                <div><div class="k">Advice fee</div><div class="v num">$0</div></div>
+              </div>
+              <div class="dr-note exo" style="margin:13px 0 0">
+                <span>⚠</span>
+                <span><b>Bought without advice.</b> Vault22 has not assessed whether this suits you.</span>
+              </div>
+            </div>
+            <div class="card">
+              <h4>Total Income and Costs<small>Quarter to date</small></h4>
+              <div class="kv">
+                <div><div class="k">Income received</div><div class="v num">$0.90</div></div>
+                <div><div class="k">Tax withheld</div><div class="v num">$0.14</div></div>
+                <div><div class="k">Net to wallet</div><div class="v num gain">$0.76</div></div>
+                <div><div class="k">Costs</div><div class="v num loss">$1.15<small>brokerage incl. $0.15 VAT</small></div></div>
+              </div>
+              <div class="hr"></div>
+              <table class="fit sm">
+                <thead><tr><th>Paid</th><th>Ex date</th><th>Holding</th><th>Gross</th><th>Tax withheld</th><th>Net swept</th></tr></thead>
+                <tbody>
+                  <tr><td>25 Aug</td><td>4 Aug</td><td class="nm"><span class="tk">AA</span><span class="dsc">US treaty rate, W-8BEN on file</span></td><td class="num">$0.90</td><td class="num">$0.14 <span class="pcell">15%</span></td><td class="num">$0.76</td></tr>
+                  <tr class="tot"><td>Total</td><td></td><td></td><td class="num">$0.90</td><td class="num">$0.14</td><td class="num">$0.76</td></tr>
+                </tbody>
+              </table>
+              <p class="rounding">No advice fee applies to an execution-only order. Brokerage is charged inside the order.</p>
+            </div>
+            <div class="card">
+              <div class="chart-head">
+                <span class="ctitle">Transactions</span>
+                <span class="txctl">
+                  <select class="sel" data-tx="aa" aria-label="Filter transactions by period">
+                    <option value="30" selected>Last month</option>
+                    <option value="90">Last 3 months</option>
+                    <option value="180">Last 6 months</option>
+                    <option value="365">Last 12 months</option>
+                    <option value="ytd">Year to date</option>
+                    <option value="all">All</option>
+                    <option value="custom">Custom range…</option>
+                  </select>
+                  <span class="custom" hidden>
+                    <input type="date" class="sel" data-from="aa" value="2026-04-01" aria-label="From date">
+                    <input type="date" class="sel" data-to="aa" value="2026-09-06" aria-label="To date">
+                  </span>
+                </span>
+              </div>
+              <table class="fit sm" data-txtable="aa">
+                <thead><tr><th>Date</th><th>Activity</th><th>Shares</th><th>Price</th><th>Brokerage</th><th>Cash effect</th></tr></thead>
+                <tbody>
+                  <tr data-d="2026-08-22"><td>22 Aug 2026</td><td>Buy</td><td class="num">9</td><td class="num">$44.99</td><td class="num">$1.00</td><td class="num">−$405.90</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="acct-head acct-foot">
+          <span class="gsum">Global invested <b class="num">USD 51,022</b> · <b class="num gain">+USD 7,470</b> <span class="num gain">+17.2%</span></span>
+          <span class="acts" style="margin-left:auto">
+            <button class="btn sm ghost">+ Add a portfolio</button>
+            <button class="btn sm ghost">+ Buy a security</button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <span>◆</span>
+      <span><b>Row percentages are profit and loss on cost, not return.</b> +10.1% on SA Momentum is R25,355 against what you paid. Factsheet, fees and full performance open with <b>Buy More</b> and <b>Sell</b>, where they inform a decision.</span>
+    </div>
+
+    <!-- ================= GOALS ================= -->
+    <div class="sec" id="sec-goals">
+      <h3>Goals</h3>
+      <p class="sh">Funded by the positions attached to them. Progress is a value, never a return.</p>
+
+      <div class="goal">
+        <div class="goal-top">
+          <h4>🎯 Gabi Education</h4>
+          <span class="tgt">target <b class="num">R750,000</b> by Jan 2031</span>
+          <span class="pc num">36.7%</span>
+        </div>
+        <div class="track"><i style="width:36.7%"></i></div>
+        <div class="kv">
+          <div><div class="k">Value toward goal</div><div class="v num">R275,322</div></div>
+          <div><div class="k">Remaining</div><div class="v num">R474,678</div></div>
+          <div><div class="k">Months left</div><div class="v num">52</div></div>
+          <div><div class="k">Monthly to close</div><div class="v num">R9,128<small><span class="tip" tabindex="0">no growth<span class="tipbox">Assumes no investment growth. Adding a growth curve would mean publishing a return forecast.</span></span></small></div></div>
+        </div>
+        <div class="fund">Funded by
+          <span class="src">🇿🇦 <b>SA Momentum</b> · managed</span>
+          <span class="btn sm ghost">+ Attach a position</span>
+        </div>
+      </div>
+
+      <div class="goal">
+        <div class="goal-top">
+          <h4>🎯 Retirement</h4>
+          <span class="tgt">target <b class="num">R2,500,000</b> by Jan 2045</span>
+          <span class="pc num">35.8%</span>
+        </div>
+        <div class="track"><i style="width:35.8%"></i></div>
+        <div class="kv">
+          <div><div class="k">Value toward goal</div><div class="v num">R894,469<small>$48,560 at 18.42</small></div></div>
+          <div><div class="k">Remaining</div><div class="v num">R1,605,531</div></div>
+          <div><div class="k">Months left</div><div class="v num">220</div></div>
+          <div><div class="k">Monthly to close</div><div class="v num">R7,298<small><span class="tip" tabindex="0">today's rate, no growth<span class="tipbox">At 16.59 this goal reads 33.0% and R7,611 a month; at 20.00 it reads 38.9% and R6,949. No forward currency view is applied.</span></span></small></div></div>
+        </div>
+        <div class="fund">Funded by
+          <span class="src">🇺🇸 <b>Global Core</b> · managed</span>
+          <span class="btn sm ghost">+ Attach a position</span>
+        </div>
+        <div class="note" style="margin-top:12px">
+          <span>⇄</span>
+          <span><b>Funded in a different currency to its target.</b> Progress moves with the rand even when the investment does nothing.</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h4>Not attached to a goal<small>Three positions worth ZAR 45,362.</small></h4>
+        <div class="fund" style="margin-top:0">
+          <span class="src"><b>AAPL</b> $1,263</span>
+          <span class="src"><b>MSFT</b> $752</span>
+          <span class="src"><b>AA</b> $448</span>
+          <span class="btn sm">Attach to a goal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= STATEMENTS ================= -->
+    <div class="sec" id="sec-stmt">
+      <h3>Statements</h3>
+      <p class="sh">Two statements, the same eight sections in the same order. One gives you the totals; the other gives you every line behind them.</p>
+
+      <div class="panel">
+        <div class="stmt">
+          <div class="stmt-card on" data-pick="kind">
+            <div class="stmt-top"><span class="rad"></span>
+              <div><h5>Concise statement</h5><span class="pg">3 pages</span></div>
+            </div>
+            <p>The totals. What you hold and what it is worth, how each investment performed, what you bought and sold, the income you received, your wallets and what you paid us.</p>
+            <ul>
+              <li>One block per section</li>
+              <li>Holdings with units, weight, price and value</li>
+              <li>One return percentage and one money amount per investment</li>
+            </ul>
+          </div>
+          <div class="stmt-card" data-pick="kind">
+            <div class="stmt-top"><span class="rad"></span>
+              <div><h5>Detailed statement</h5><span class="pg">7 pages</span></div>
+            </div>
+            <p>Every entry behind those totals — the document to reconcile against, or to hand to an accountant, a lender or an auditor.</p>
+            <ul>
+              <li>Every holding with its ISIN, exchange, cost and profit and loss</li>
+              <li>Every order, distribution, fee and wallet movement</li>
+              <li>How each return was worked out, and a glossary</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="stmt-row">
+          <span class="flab">Period</span>
+          <div class="pick on" data-pick="period"><b>To 31 August 2026</b><span>Last month end. Prices and values are final and will not move.</span></div>
+          <div class="pick" data-pick="period"><b>To today</b><span>Matches what you see on this page. Prices are delayed 15 minutes and still moving.</span></div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="stmt-row">
+          <span class="flab">How would you like it</span>
+          <div class="pick on" data-pick="deliver"><b>Download the PDF</b><span>Opens straight away.</span></div>
+          <div class="pick" data-pick="deliver"><b>Email it to me</b><span>To greg.flash@gmail.com, usually within a minute.</span></div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="stmt-row" style="justify-content:space-between">
+          <span style="font-size:12.5px;color:var(--muted)">Both accounts and both wallets are included. Each account is shown in its own currency.</span>
+          <button class="btn" id="gen-stmt">Generate statement</button>
+        </div>
+
+        <div class="issued">
+          <span>Issued to <b>Gregory Flash</b></span>
+          <span>Client number <b class="num">VF-100482</b></span>
+          <span><span class="tip" tabindex="0">the name we hold for you<span class="tipbox">Statements are issued in the name verified at onboarding, which is the name on your profile. Change it under Profile settings — a change is re-verified before the next statement is issued.</span></span></span>
+        </div>
+      </div>
+
+      <div class="note">
+        <span>◆</span>
+        <span><b>A month-end statement is final; a to-date statement is not.</b> Prices move until the market closes, so a statement run today shows values that will differ from the same statement run tomorrow. Anything going to a lender, an auditor or SARS should be a month-end one.</span>
+      </div>
+    </div>
+
+    <!-- ================= CONVENTIONS ================= -->
+    <div class="sec">
+      <h3>Conventions</h3>
+      <p class="sh">So the app and the statement can never disagree by rounding.</p>
+      <div class="panel">
+        <div class="scroll"><table class="dec">
+          <tbody>
+            <tr><td>Percentages</td><td>One decimal everywhere.</td><td><span class="st st-y">Settled</span></td></tr>
+            <tr><td>Currency</td><td>Balances, values and totals in whole units. <b>Prices, per-unit costs, income and fees keep their cents</b> — as does anything under 10.</td><td><span class="st st-y">Settled</span></td></tr>
+            <tr><td>Display FX rate</td><td>Shown as <b>USDZAR 18.42</b>; source and timestamp in the tooltip.</td><td><span class="st st-y">Settled</span></td></tr>
+            <tr><td>Converted figures</td><td>Values only. Never a blended cross-currency return.</td><td><span class="st st-y">Settled</span></td></tr>
+            <tr><td>Rounding order</td><td>Convert at account level so groups sum to Total value.</td><td><span class="st st-y">Settled</span></td></tr>
+            <tr><td>Dealt rates keep full precision</td><td>Arithmetic, not preference. R13,271.76 at 16.5897 gives exactly $800; at 16.59 it gives $799.99 and the statement stops reconciling.</td><td><span class="st st-o">Confirm</span></td></tr>
+            <tr><td>Where the cents line falls</td><td>A share price and a distribution keep cents; a portfolio balance does not. The boundary is the kind of figure, not its size — worth confirming it reads that way to a client.</td><td><span class="st st-o">Confirm</span></td></tr>
+            <tr><td>Fee rates at one decimal</td><td>Advice 0.5% (from 0.51%), custody 0.1% (from 0.14%). These are disclosed rates; one decimal understates custody by a third.</td><td><span class="st st-o">Confirm</span></td></tr>
+            <tr><td>One position, one goal</td><td>Splitting a holding across goals makes the row chip ambiguous.</td><td><span class="st st-o">Confirm</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- ================= DECISIONS ================= -->
+    <div class="sec">
+      <h3>Decisions</h3>
+      <p class="sh">Each settled item changes the statement as well as the app.</p>
+
+      <div class="panel">
+        <h4>Settled</h4>
+        <div class="scroll"><table class="dec">
+          <tbody>
+            <tr><td>Total value is the parent</td><td>Investments plus wallet cash, with Invested and Available to invest as components.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>The number already existed</td><td>“97.7% invested / 2.3% waiting” is computed on account plus wallet — $49,722. The statement published the percentage and withheld the figure.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Separate accounts by advice basis</td><td>Per currency: managed, execution-only, wallet.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Many portfolios per managed account</td><td>The statement's one-portfolio-per-account wording changes.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Three kinds of cash, named apart</td><td>Only wallet cash is available to invest. Including the sleeve would overstate it by 34.3% — and Tara's idle-cash card acts on that number.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Components are read-only</td><td>No buy or sell controls in a holdings table — you instruct the portfolio, not its funds.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Two add doors</td><td>Advised journey and execution-only journey never share a “+”.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Suitability flags on the row</td><td>An instrument rated outside your profile is flagged on the position itself, not only in an insight card. No such holding is in the demo data now that the SA execution-only account is gone.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Row % is gain on cost</td><td>Period returns live inside the expanded row; MAX ties back to the row's gain on cost.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>Goals are back</td><td>A chip on every row; “no goal” is a prompt.</td><td><span class="st st-y">Done</span></td></tr>
+            <tr><td>No tabs</td><td>Everything expands in place.</td><td><span class="st st-y">Done</span></td></tr><tr><td>Factsheet and fees sit behind Buy More</td><td>TER, advice fee, minimum, recommended term and full performance appear where a decision is made, not on the holding itself.</td><td><span class="st st-y">Done</span></td></tr><tr><td>Holding names come from the IM database</td><td>The statement specimen had four wrong: WNXT40 and WTOP20 are 10X Wealth funds, not 1nvest; CSGOVI is a nominal GOVI bond ETF, not inflation-linked; APACXJ is 10X All Asia <b>actively managed</b>, not a Satrix index tracker. Corrected here — the statement still needs the same fix.</td><td><span class="st st-y">Done</span></td></tr><tr><td>Sell pays to the wallet only</td><td>No bank account on the Sell screen at all. Withdrawing to a bank happens once, from the wallet, so the ten-account list the live screen shows disappears rather than being tidied.</td><td><span class="st st-y">Done</span></td></tr><tr><td>Funding lives in the wallet</td><td>Instant EFT and EFT are removed from Buy — they are how a wallet is topped up, not how a portfolio is bought. One-time buys come from the wallet; recurring defaults to the debit order.</td><td><span class="st st-y">Done</span></td></tr><tr><td>Statements are self-service</td><td>Both statements offered side by side with what each is for, a month-end or to-date period, and download or email. Issued in the verified profile name.</td><td><span class="st st-y">Done</span></td></tr><tr><td>Buy carries the portfolio in full</td><td>Description, best-for, track record, look-through allocation, geography and holdings — the material from the current Fund Details journey, at the point of decision.</td><td><span class="st st-y">Done</span></td></tr><tr><td>Portfolio chart follows the statement</td><td>What it's worth against what you put in, since a managed portfolio has no unit price to plot.</td><td><span class="st st-y">Done</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h4>Open</h4>
+        <div class="scroll"><table class="dec">
+          <tbody>
+            <tr><td>Wallet per account or per currency</td><td>One per currency here, matching the statement. The execution-only account may need its own settlement wallet.</td><td><span class="st st-o">Open</span></td></tr>
+            <tr><td>Statement section 3 splits in two</td><td>Portfolios with look-through, securities without. Section 4 needs two shapes for the same reason.</td><td><span class="st st-o">Open</span></td></tr>
+            <tr><td>Advice fee must not touch direct trades</td><td>Section 7 charges on each amount invested; execution-only carries brokerage only.</td><td><span class="st st-o">Open</span></td></tr>
+            <tr><td>Closing FX rate is a new statement field</td><td>The specimens publish no rate for 30 June. Across 16.59 to 18.42 the headline moves R95,498.</td><td><span class="st st-o">Open</span></td></tr>
+            <tr><td>Where Smart Saver sits</td><td>Bought as an investment, behaves like cash, and an insight card points cash toward it.</td><td><span class="st st-o">Open</span></td></tr>
+            <tr><td>Goal reference on the statement</td><td>No goals section exists today.</td><td><span class="st st-o">Open</span></td></tr>
+            <tr><td>Reporting currency</td><td>Display preference, or a reporting-basis election that changes the statement?</td><td><span class="st st-o">Open</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <div class="panel">
+        <h4>Proportion check<small>Worth keeping in view while iterating.</small></h4>
+        <div class="kv">
+          <div><div class="k">Managed portfolios</div><div class="v num">96.3%<small>of invested value</small></div></div>
+          <div><div class="k">Direct securities</div><div class="v num">3.7%<small>of invested value</small></div></div>
+          <div><div class="k">Rows with trade controls</div><div class="v num">3 of 5</div></div>
+        </div>
+        <div class="note calm" style="margin-top:13px">
+          <span>◆</span>
+          <span>Security rows need more affordances than portfolio rows, so the 3.7% pulls design attention out of proportion to its weight.</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="modal-host" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<div class="foot">
+  <p><b>Prototype only.</b> The view is live, but the numbers behind it are static: managed portfolio values and the performance figures are the specimen values from the Vault22 Concise and Detailed Statements for the quarter to 30 June 2026, and reconcile to the cent before rounding. Securities carry Uday's prototype figures. Fund names, tickers, ISINs and TERs are read from the Investment Management database. Goals, both price series, ISINs and income lines are illustrative. USDZAR 18.42 is a placeholder pending a rate-source decision.</p>
+</div>
+</div>
+
+<script>
+(function(){
+var PD={"sam":{"1M":{"money":3180,"pct":1.2,"worth":[168727.82,180902.92,193558.78,199831.39,209273.12,218558.65,226142.3,234741.06,245758.22,251898.76,257485.31,269726.14,275321.65],"put":[168727.82,181238.32,191278.0,200557.16,209374.55,217863.74,226100.24,234132.36,241993.58,249708.37,257295.36,264769.19,272141.65]},"3M":{"money":9462,"pct":3.6,"worth":[164832.98,179186.78,187132.19,197514.51,205339.94,218380.01,223148.47,234424.68,242603.35,251713.64,258387.12,266488.2,275321.65],"put":[164832.98,177054.69,186862.63,195927.59,204541.44,212834.67,220881.04,228727.75,236407.5,243944.21,251356.06,258657.37,265859.65]},"6M":{"money":12910,"pct":4.9,"worth":[162695.22,177063.83,185922.3,196038.92,204523.96,212541.2,222647.13,230542.98,238959.54,247767.79,255573.56,267083.58,275321.65],"put":[162695.22,174758.43,184439.16,193386.55,201888.69,210074.36,218016.37,225761.32,233341.48,240780.43,248096.16,255302.78,262411.65]},"1Y":{"money":18240,"pct":7.1,"worth":[159390.62,170669.64,184643.68,191336.61,203535.22,213486.66,222373.0,229332.45,238640.89,249663.61,260075.05,267348.75,275321.65],"put":[159390.62,171208.8,180692.9,189458.56,197788.0,205807.41,213588.11,221175.75,228601.94,235889.8,243056.93,250117.17,257081.65]},"MAX":{"money":25355,"pct":10.1,"worth":[154979.32,167220.64,179121.27,186824.24,200900.29,210010.81,220559.63,226539.18,235673.21,244318.46,254495.2,262929.28,275321.65],"put":[154979.32,166470.42,175692.04,184215.1,192314.02,200111.48,207676.84,215054.48,222275.14,229361.3,236330.08,243194.92,249966.65]}},"gc":{"1M":{"money":980,"pct":2.3,"worth":[29499.39,31499.9,33536.84,35475.95,37053.24,38651.3,39926.16,41757.35,42988.58,44000.44,45801.78,46796.53,48559.66],"put":[29499.39,31686.65,33441.93,35064.25,36605.83,38090.03,39530.05,40934.34,42308.75,43657.56,44984.02,46290.7,47579.66]},"3M":{"money":4073,"pct":9.5,"worth":[27581.73,29892.1,31500.4,33401.09,35256.2,36630.14,38714.41,40796.02,41997.65,44049.25,45848.85,46554.15,48559.66],"put":[27581.73,29626.8,31267.98,32784.83,34226.2,35613.92,36960.33,38273.33,39558.39,40819.52,42059.75,43281.49,44486.66]},"6M":{"money":5410,"pct":13.0,"worth":[26752.79,28881.63,30756.6,32760.66,34376.02,36339.91,37858.33,39962.17,41755.64,43308.5,45524.15,46499.53,48559.66],"put":[26752.79,28736.4,30328.25,31799.52,33197.57,34543.58,35849.52,37123.06,38369.51,39592.73,40795.69,41980.71,43149.66]},"1Y":{"money":6290,"pct":15.2,"worth":[26207.19,28284.49,30361.53,32094.96,33977.23,36134.52,37500.61,39460.57,41123.09,43657.74,45016.93,46657.75,48559.66],"put":[26207.19,28150.35,29709.73,31150.99,32520.53,33839.09,35118.4,36365.97,37586.99,38785.27,39963.7,41124.55,42269.66]},"MAX":{"money":7336,"pct":17.8,"worth":[25558.67,28020.44,29843.19,32079.08,33626.57,35789.02,36992.58,39143.43,40681.59,42415.71,44347.21,46421.76,48559.66],"put":[25558.67,27453.74,28974.54,30380.14,31715.78,33001.71,34249.37,35466.06,36656.87,37825.5,38974.76,40106.89,41223.66]}}},SYM={sam:"R",gc:"$"};
+var SD={"aapl":{"sym":"$","avg":298.4,"px":[250.34,250.74,259.77,254.88,263.56,263.93,262.41,271.08,267.28,275.32,272.87,275.74,283.06,291.45,283.95,287.98,296.53,303.94,301.07,300.98,312.44,300.83,316.0,309.78,315.7]},"msft":{"sym":"$","avg":486.2,"px":[414.96,420.76,432.03,425.87,430.32,435.6,430.36,441.07,447.24,454.46,442.29,450.53,449.17,469.26,470.16,458.45,484.15,487.37,483.54,486.19,478.61,478.61,494.75,486.64,501.15]},"aa":{"sym":"$","avg":45.1,"px":[36.61,37.25,37.74,36.81,38.35,38.61,39.39,39.18,39.87,40.96,41.08,42.14,41.8,42.5,44.44,44.39,45.17,46.26,45.98,45.85,48.14,48.26,49.01,49.51,49.79]}};
+
+var TODAY = new Date();
+var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var PERMONTHS = {"1M":1,"3M":3,"6M":6,"1Y":12,"MAX":36};
+function niceTicks(lo,hi,n){
+  var span=(hi-lo)||1, raw=span/n, mag=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10));
+  var nz=raw/mag, step=(nz<=1?1:nz<=2?2:nz<=2.5?2.5:nz<=5?5:10)*mag;
+  var t0=Math.floor(lo/step)*step, t1=Math.ceil(hi/step)*step, out=[];
+  for(var v=t0; v<=t1+step*1e-6; v+=step) out.push(Math.round(v*1e6)/1e6);
+  return out;
+}
+function fmtAxis(v,sym){
+  var a=Math.abs(v);
+  if(a>=1000000) return sym+(v/1000000).toFixed(a>=10000000?0:1)+"m";
+  if(a>=1000) return sym+Math.round(v/1000)+"k";
+  return sym+(a<10? v.toFixed(2) : Math.round(v));
+}
+function dateTicks(per){
+  var end=new Date(TODAY.getTime());
+  var start=new Date(TODAY.getTime()); start.setMonth(start.getMonth()-PERMONTHS[per]);
+  var every={"1M":1,"3M":1,"6M":2,"1Y":3,"MAX":12}[per];
+  var cands=[], d=new Date(start.getFullYear(), start.getMonth()+1, 1);
+  while(d<=end){
+    if(per==="MAX"){ if(d.getMonth()===0) cands.push(new Date(d.getTime())); }
+    else if(((d.getMonth()-start.getMonth()+120)%every)===0) cands.push(new Date(d.getTime()));
+    d=new Date(d.getFullYear(), d.getMonth()+1, 1);
+  }
+  var lab=function(x){
+    if(per==="MAX") return "1 Jan "+String(x.getFullYear()).slice(2);
+    if(per==="1Y")  return "1 "+MONTHS[x.getMonth()]+" "+String(x.getFullYear()).slice(2);
+    return "1 "+MONTHS[x.getMonth()];
+  };
+  return {start:start,end:end,ticks:cands.map(function(x){return {d:x,l:lab(x)};})};
+}
+function fmtDay(d){ return d.getDate()+" "+MONTHS[d.getMonth()]+" "+String(d.getFullYear()).slice(2); }
+
+function renderChart(el, opt){
+  var X0=58,X1=606,Y0=16,Y1=146, W=X1-X0, H=Y1-Y0;
+  var all=[].concat(opt.series[0].v); if(opt.series[1]) all=all.concat(opt.series[1].v);
+  if(opt.hline!=null) all.push(opt.hline);
+  var lo=Math.min.apply(null,all), hi=Math.max.apply(null,all);
+  var pad=(hi-lo)*0.12||1; var tk=niceTicks(lo-pad,hi+pad,4);
+  var tlo=tk[0], thi=tk[tk.length-1];
+  var Y=function(v){ return (Y1-(v-tlo)/(thi-tlo)*H).toFixed(1); };
+  var dt=dateTicks(opt.per), span=dt.end-dt.start;
+  var XD=function(d){ return (X0+(d-dt.start)/span*W).toFixed(1); };
+  var pts=function(a){ return a.map(function(v,i){ return (X0+i*(W/(a.length-1))).toFixed(1)+","+Y(v); }).join(" "); };
+  var s='<svg viewBox="0 0 620 196" role="img" aria-label="'+opt.alt+'">';
+  tk.forEach(function(v){
+    s+='<line x1="'+X0+'" y1="'+Y(v)+'" x2="'+X1+'" y2="'+Y(v)+'" stroke="var(--line2)" stroke-width="1"/>'
+      +'<line x1="'+(X0-4)+'" y1="'+Y(v)+'" x2="'+X0+'" y2="'+Y(v)+'" stroke="var(--line)" stroke-width="1"/>'
+      +'<text x="'+(X0-8)+'" y="'+(parseFloat(Y(v))+3.4)+'" text-anchor="end" fill="var(--faint)" font-size="10" font-family="IBM Plex Mono, monospace">'+fmtAxis(v,opt.sym)+'</text>';
+  });
+  s+='<line x1="'+X0+'" y1="'+Y1+'" x2="'+X1+'" y2="'+Y1+'" stroke="var(--line)" stroke-width="1"/>';
+  var edges=[{x:X0,l:fmtDay(dt.start)},{x:X1,l:fmtDay(dt.end)}];
+  dt.ticks.forEach(function(t){
+    var x=parseFloat(XD(t.d)); if(x-X0<46 || X1-x<46) return;
+    s+='<line x1="'+x+'" y1="'+Y1+'" x2="'+x+'" y2="'+(Y1+4)+'" stroke="var(--line)" stroke-width="1"/>'
+      +'<text x="'+x+'" y="'+(Y1+18)+'" text-anchor="middle" fill="var(--faint)" font-size="10" font-family="Manrope, sans-serif">'+t.l+'</text>';
+  });
+  edges.forEach(function(e,i){
+    s+='<text x="'+e.x+'" y="'+(Y1+18)+'" text-anchor="'+(i?"end":"start")+'" fill="var(--muted)" font-size="10" font-weight="600" font-family="Manrope, sans-serif">'+e.l+'</text>';
+  });
+  if(opt.series[1]) s+='<polyline fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" points="'+pts(opt.series[1].v)+'"/>';
+  var main=opt.series[0].v;
+  s+='<polygon fill="var(--accent-soft)" points="'+X0+','+Y1+' '+pts(main)+' '+X1+','+Y1+'"/>'
+    +'<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="'+pts(main)+'"/>';
+  if(opt.hline!=null){
+    s+='<line x1="'+X0+'" y1="'+Y(opt.hline)+'" x2="'+X1+'" y2="'+Y(opt.hline)+'" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="5 4"/>';
+  }
+  s+='<circle cx="'+X1+'" cy="'+Y(main[main.length-1])+'" r="3.5" fill="var(--accent)"/>'
+    +'<text x="0" y="10" fill="var(--faint)" font-size="10" font-weight="700" font-family="Manrope, sans-serif" letter-spacing="0.08em">'+opt.ylab+'</text>'
+    +'<text x="'+((X0+X1)/2)+'" y="192" text-anchor="middle" fill="var(--faint)" font-size="10" font-weight="700" font-family="Manrope, sans-serif" letter-spacing="0.08em">DATE</text>'
+    +'</svg>';
+  el.innerHTML=s;
+}
+function drawP(key,per){
+  var d=PD[key][per], sym=SYM[key];
+  var el=document.getElementById("ch-"+key); if(!el) return;
+  renderChart(el,{per:per,sym:sym,ylab:"VALUE · "+(sym==="R"?"ZAR":"USD"),
+    alt:"What the portfolio is worth against what you put in",
+    series:[{v:d.worth},{v:d.put}]});
+  var m=document.getElementById("ret-"+key+"-money"), q=document.getElementById("ret-"+key+"-pct");
+  if(m) m.textContent=(d.money<0?"−":"+")+sym+Math.abs(d.money).toLocaleString("en-US");
+  if(q) q.textContent=(d.pct<0?"−":"+")+Math.abs(d.pct).toFixed(1)+"%";
+}
+var SLICE={"1M":4,"3M":7,"6M":13,"1Y":19,"MAX":25};
+function drawS(key,per){
+  var d=SD[key], el=document.getElementById("ch-"+key); if(!el) return;
+  var n=SLICE[per], v=d.px.slice(d.px.length-n);
+  renderChart(el,{per:per,sym:d.sym,ylab:"PRICE · USD",alt:"Share price against your average cost",
+    series:[{v:v}],hline:d.avg});
+}
+
+function applyTx(key){
+  var sel=document.querySelector('[data-tx="'+key+'"]');
+  var tbl=document.querySelector('[data-txtable="'+key+'"]');
+  if(!sel||!tbl) return;
+  var v=sel.value, now=new Date(), from=null, to=now;
+  var cw=sel.parentNode.querySelector(".custom");
+  if(v==="custom"){
+    cw.hidden=false;
+    var f=document.querySelector('[data-from="'+key+'"]'), t=document.querySelector('[data-to="'+key+'"]');
+    from=f.value?new Date(f.value):null; to=t.value?new Date(t.value):now;
+  } else { cw.hidden=true;
+    if(v==="all") from=null;
+    else if(v==="ytd") from=new Date(now.getFullYear(),0,1);
+    else { from=new Date(now.getTime()); from.setDate(from.getDate()-parseInt(v,10)); }
+  }
+  var shown=0, rows=tbl.querySelectorAll("tbody tr");
+  rows.forEach(function(r){
+    if(r.classList.contains("empty")) return;
+    var ds=r.getAttribute("data-d");
+    if(!ds||ds==="all"){ r.hidden=false; return; }
+    var d=new Date(ds);
+    var ok=(v==="all")||((!from||d>=from)&&d<=to);
+    r.hidden=!ok; if(ok) shown++;
+  });
+  var body=tbl.querySelector("tbody"), e=tbl.querySelector("tr.empty");
+  if(!shown){
+    if(!e){ e=document.createElement("tr"); e.className="empty";
+      var cols=tbl.querySelectorAll("thead th").length;
+      e.innerHTML='<td colspan="'+cols+'">No transactions in this period. Try a longer range.</td>';
+      body.appendChild(e); }
+    e.hidden=false;
+    tbl.querySelectorAll("tbody tr.tot").forEach(function(r){r.hidden=true;});
+  } else if(e){ e.hidden=true; }
+}
+
+var WAL={sam:{cur:"R",code:"ZAR",bal:"9,986",name:"South Africa wallet"},
+         gc:{cur:"$",code:"USD",bal:"1,162",name:"Global wallet"},
+         aapl:{cur:"$",code:"USD",bal:"1,162",name:"Global wallet"},
+         msft:{cur:"$",code:"USD",bal:"1,162",name:"Global wallet"},
+         aa:{cur:"$",code:"USD",bal:"1,162",name:"Global wallet"}};
+var DETAIL={
+ sam:{desc:"A South African-focused, growth-oriented multi-asset portfolio built from exchange-traded funds and unit trusts. The neutral "
+          +"allocation is 75% equities and 25% fixed income, and it aims to outperform inflation over time.",
+      best:"Suitable for an investor who prioritises maximising returns over capital preservation, and is willing to accept higher levels of "
+          +"risk for potential long-term growth.",
+      perf:[["1 year","+19.0%"],["3 years","+15.1% p.a."],["5 years","+12.8% p.a."],["Since 2019","+13.3% p.a."]],
+      perfnote:"Model track record to 31 May 2026. Past performance is not a guide to future performance.",
+      allo:[["Global equity",40.0],["SA equity",31.2],["SA fixed income",25.2],["Cash",2.0],["Other",1.6]],
+      geo:[["South Africa",31.2],["United States",18.5],["Taiwan",4.6],["China",3.6],["South Korea",3.5]],
+      holds:[["10X Total World Stock Feeder ETF","GLOBAL",26.4],["10X Wealth Next 40 Equal Weighted","WNXT40",15.3],
+             ["10X Wealth Top 20 Capped","WTOP20",14.8],["10X Wealth GOVI Bond ETF","CSGOVI",14.4],
+             ["10X All Asia AMETF","APACXJ",14.2],["Ninety One Diversified Income Prescient Feeder AMETF","91DINC",7.1],
+             ["Prescient Income Provider Feeder AMETF","PIPETF",6.9],["STeFI Call Deposit ZAR","portfolio cash",0.9]]},
+ gc:{desc:"A globally diversified multi-asset portfolio built from exchange-traded funds. The neutral allocation is 70% equities and 30% "
+         +"fixed income, spread across developed and emerging markets.",
+     best:"Suitable for an investor who wants one decision to cover global diversification, and can accept moderate ups and downs for "
+         +"long-term growth.",
+     perf:[["1 year","+21.2%"],["3 years","+15.1% p.a."],["5 years","+6.4% p.a."],["Since 2020","+9.1% p.a."]],
+     perfnote:"Model track record to 31 May 2026. Past performance is not a guide to future performance.",
+     allo:[["Equity",72.9],["Fixed income",23.0],["Other",3.6],["Cash",0.5]],
+     geo:[["United States",47.1],["Japan",3.7],["Taiwan",2.4],["United Kingdom",2.3],["Canada",2.3]],
+     holds:[["iShares MSCI ACWI ETF","ACWI",72.2],["iShares Core International Aggregate Bond ETF","IAGG",16.3],
+            ["iShares Core U.S. Aggregate Bond ETF","AGG",10.5],["USD cash sweep","portfolio cash",0.9]]}
+};
+function detailBlock(key){
+  var d=DETAIL[key]; if(!d) return "";
+  var h='<div class="fgrp"><span class="flab">About this portfolio</span>'
+       +'<p class="mdesc">'+d.desc+'</p><p class="mdesc"><b>Best for</b> — '+d.best+'</p></div>';
+  h+='<div class="fgrp"><span class="flab">How it has done</span><div class="perfrow">'
+     +d.perf.map(function(p){return '<div><div class="pk">'+p[0]+'</div><div class="pv gain num">'+p[1]+'</div></div>';}).join("")
+     +'</div><div class="fhint">'+d.perfnote+'</div></div>';
+  h+='<div class="fgrp"><span class="flab">What your money buys</span><div class="allo">'
+     +d.allo.map(function(a){return '<div class="allo-row"><span>'+a[0]+'</span>'
+        +'<span class="allo-bar"><i style="width:'+a[1]+'%"></i></span><b>'+a[1].toFixed(1)+'%</b></div>';}).join("")
+     +'</div><div class="fhint">Look-through asset allocation at 31 July 2026. Largest exposures: '
+     +d.geo.map(function(g){return g[0]+" "+g[1].toFixed(1)+"%";}).join(" · ")+'.</div></div>';
+  h+='<div class="fgrp"><span class="flab">Holdings</span><div class="allo">'
+     +d.holds.map(function(x){return '<div class="allo-row"><span style="grid-column:1/3"><b>'+x[0]+'</b>'
+        +' <span style="color:var(--faint);font-size:11px">'+x[1]+'</span></span><b>'+x[2].toFixed(1)+'%</b></div>';}).join("")
+     +'</div></div>';
+  return h;
+}
+var META={
+ sam:{n:"SA Momentum",risk:"Growth",ter:"0.3%",min:"R500",term:"4 years",bal:"R275,322",kind:"p",goal:"Gabi Education",reb:"Annual"},
+ gc:{n:"Global Core",risk:"Balanced",ter:"0.2%",min:"$100",term:"5 years",bal:"$48,560",kind:"p",goal:"Retirement",reb:"Monthly"},
+ aapl:{n:"Apple Inc.",tk:"AAPL",risk:"Balanced",px:"$315.70",sh:"4",bal:"$1,263",kind:"s"},
+ msft:{n:"Microsoft Corporation",tk:"MSFT",risk:"Balanced",px:"$501.15",sh:"1.5",bal:"$752",kind:"s"},
+ aa:{n:"Alcoa Corporation",tk:"AA",risk:"Balanced",px:"$49.79",sh:"9",bal:"$448",kind:"s"}
+};
+function costRow(a,b){return '<div class="costrow"><span>'+a+'</span><b class="num">'+b+'</b></div>';}
+function buildModal(id){
+  var p=id.split("-"), key=p[0], act=p[1], m=META[key], w=WAL[key];
+  var title=(act==="buy"?"Buy more · ":"Sell · ")+m.n;
+  var sub=(m.kind==="p"?"Managed portfolio · Risk profile "+m.risk+" · advised"
+                       :m.tk+" · Risk profile "+m.risk+" · execution-only, no advice");
+  var b="";
+  if(act==="buy"){
+    b+='<div class="fgrp"><span class="flab">'+(m.kind==="p"?"One-time amount":"Amount to invest")+'</span>'
+      +'<div class="finput"><span class="cur">'+w.cur+'</span><input type="text" inputmode="decimal" placeholder="0.00"></div>'
+      +'<div class="fhint">'+(m.kind==="p"?"Minimum "+m.min+". ":"Priced at "+m.px+", delayed 15 min. ")
+      +'Available in your '+w.name+': <b>'+w.code+' '+w.bal+'</b>.</div></div>';
+    if(m.kind==="p"){
+      b+='<div class="fgrp"><span class="flab">Pay this from</span>'
+        +'<div class="opt on"><span class="rad"></span><span><b>'+w.name+'</b><span class="sub">Settles immediately</span></span>'
+        +'<span class="amt num">'+w.code+" "+w.bal+'</span></div>'
+        +'<div class="fhint">Your wallet is the only source. Top it up from the wallet section — that is where instant EFT, EFT and card top-ups live.</div></div>';
+      b+='<div class="fgrp"><span class="flab">Recurring auto deposit</span>'
+        +'<div class="finput"><span class="cur">'+w.cur+'</span><input type="text" inputmode="decimal" placeholder="0.00"></div>'
+        +'<div class="fhint">Optional. Minimum '+m.min+' a month, on a payment day you choose.</div>'
+        +'<div class="opt on" style="margin-top:8px"><span class="rad"></span><span><b>Debit order · Absa DebiCheck</b>'
+        +'<span class="sub">Collected from your bank on your payment day</span></span></div>'
+        +'<div class="opt"><span class="rad"></span><span><b>From your '+w.name+'</b>'
+        +'<span class="sub">Only runs if the balance covers it that month</span></span></div></div>';
+      b+='<div class="fgrp"><span class="flab">Goal</span>'
+        +'<div class="opt on"><span class="rad"></span><span><b>🎯 '+m.goal+'</b><span class="sub">This investment counts toward it</span></span></div></div>';
+      b+=detailBlock(key);
+      b+='<div class="fgrp"><span class="flab">What this costs</span>'
+        +costRow("Total annual fee · weighted TER of the funds", m.ter+" a year")
+        +costRow("Advice fee · once, on the amount invested", "0.5% + VAT")
+        +costRow("Brokerage · charged inside each order", "in the price")
+        +costRow("Platform fee · included in Premium", "none")
+        +costRow("Rebalanced", m.reb)
+        +'</div>';
+      b+='<div class="fgrp"><span class="flab">Before you decide</span><div class="mlinks">'
+        +'<span class="btn sm ghost">Factsheet (PDF)</span><span class="btn sm ghost">Full performance</span>'
+        +'<span class="btn sm ghost">Fee breakdown</span><span class="btn sm ghost">Holdings</span></div>'
+        +'<div class="fhint">Recommended term '+m.term+'. Past performance is not a guide to future performance.</div></div>';
+    } else {
+      b+='<div class="fgrp"><span class="flab">Pay from</span>'
+        +'<div class="opt on"><span class="rad"></span><span><b>'+w.name+'</b><span class="sub">Buying power</span></span><span class="amt num">'+w.code+" "+w.bal+'</span></div></div>';
+      b+='<div class="fgrp"><span class="flab">What this costs</span>'
+        +costRow("Brokerage · charged inside the order","$1.00 + VAT")
+        +costRow("Advice fee · execution-only","none")
+        +'</div>';
+      b+='<div class="dr-note exo"><span>⚠</span><span><b>No advice is given on this order.</b> '
+        +m.tk+' is rated '+m.risk+' and your profile is Balanced. Vault22 has not assessed whether it suits you.</span></div>';
+    }
+  } else {
+    b+='<div class="fgrp"><span class="flab">Available to sell</span>'
+      +'<div class="opt on"><span class="rad"></span><span><b>Full '+(m.kind==="p"?"withdrawal":"sale")+'</b>'
+      +'<span class="sub">'+(m.kind==="p"?"Sell the whole portfolio":"Sell all "+m.sh+" shares")+'</span></span>'
+      +'<span class="amt num">'+m.bal+'</span></div>'
+      +'<div class="opt"><span class="rad"></span><span><b>Partial</b><span class="sub">Choose an amount</span></span></div></div>';
+    b+='<div class="fgrp"><span class="flab">Amount</span>'
+      +'<div class="finput"><span class="cur">'+w.cur+'</span><input type="text" inputmode="decimal" placeholder="0.00"></div>'
+      +'<div class="fhint">'+(m.kind==="p"?"A withdrawal is taken across the holdings in their current proportions, so the shape of your portfolio is kept."
+                                          :"Priced at "+m.px+", delayed 15 min. Trades execute at the market price.")+'</div></div>';
+    b+='<div class="fgrp"><span class="flab">Proceeds to</span>'
+      +'<div class="opt on"><span class="rad"></span><span><b>'+w.name+'</b>'
+      +'<span class="sub">The only destination — sale proceeds always land here</span></span></div>'
+      +'<div class="fhint">To move the money to your bank, withdraw from the wallet once it has settled. Withdrawals go only to a personal '
+      +'bank account registered against your ID number.</div></div>';
+    b+='<div class="fgrp"><span class="flab">What this costs</span>'
+      +costRow("Brokerage · charged inside the order", m.kind==="p"?"in the price":"$1.00 + VAT")
+      +costRow("Advice fee · not charged on a sale","none")
+      +costRow("Settlement","three business days")+'</div>';
+    if(m.kind==="p") b+='<div class="fgrp"><span class="flab">Before you decide</span><div class="mlinks">'
+      +'<span class="btn sm ghost">Factsheet (PDF)</span><span class="btn sm ghost">Full performance</span>'
+      +'<span class="btn sm ghost">Fee breakdown</span></div></div>';
+  }
+  var foot=(act==="buy"?"Agree and continue":"Continue");
+  return '<div class="mbk" data-close><div class="mbox" role="dialog" aria-modal="true" aria-label="'+title+'">'
+   +'<div class="mhead"><div><h3>'+title+'</h3><div class="msub">'+sub+'</div></div>'
+   +'<button class="mx" data-close aria-label="Close">×</button></div>'
+   +'<div class="mbody">'+b+'</div>'
+   +'<div class="mfoot"><button class="btn ghost" data-close>Cancel</button><button class="btn">'+foot+'</button></div>'
+   +'</div></div>';
+}
+var toastT;
+function toast(html){
+  var t=document.getElementById("toast"); if(!t) return;
+  t.innerHTML=html; t.classList.add("on");
+  clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove("on"); }, 5200);
+}
+function openModal(id){
+  var host=document.getElementById("modal-host");
+  host.innerHTML=buildModal(id); host.hidden=false;
+  document.body.style.overflow="hidden";
+  var f=host.querySelector("input,button"); if(f) f.focus();
+}
+function closeModal(){
+  var host=document.getElementById("modal-host");
+  host.hidden=true; host.innerHTML=""; document.body.style.overflow="";
+}
+
+  var el=document.getElementById("asof");
+  if(el){ try{ el.textContent=new Date().toLocaleString("en-ZA",{timeZone:"Africa/Johannesburg",
+    day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:false}); }catch(err){} }
+  drawP("sam","MAX"); drawP("gc","MAX");
+  ["aapl","msft","aa"].forEach(function(k){ drawS(k,"6M"); applyTx(k); });
+  ["sam","gc"].forEach(applyTx);
+
+  document.addEventListener("change", function(e){
+    var t=e.target.closest("[data-tx]"); if(t){ applyTx(t.dataset.tx); return; }
+    var f=e.target.closest("[data-from],[data-to]");
+    if(f) applyTx(f.dataset.from||f.dataset.to);
+  });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeModal(); });
+  document.addEventListener("click", function(e){
+    if(e.target.closest("[data-close]")){ closeModal(); return; }
+    var mo=e.target.closest("[data-modal]");
+    if(mo){ e.preventDefault(); openModal(mo.dataset.modal); return; }
+    var t=e.target.closest("[data-toggle]");
+    if(t){
+      var panel=document.getElementById(t.dataset.toggle);
+      var open=panel.hidden; panel.hidden=!open;
+      t.setAttribute("aria-expanded",String(open));
+      var row=t.closest(".row"); if(row) row.toggleAttribute("data-open",open);
+      return;
+    }
+    var r=e.target.closest(".ranges button");
+    if(r){
+      var grp=r.parentNode;
+      grp.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed","false"); });
+      r.setAttribute("aria-pressed","true");
+      var k=grp.dataset.chart;
+      if(k && r.dataset.per){ (SD[k]?drawS:drawP)(k, r.dataset.per); }
+      return;
+    }
+    var o=e.target.closest(".opt");
+    if(o){ o.parentNode.querySelectorAll(".opt").forEach(function(x){x.classList.remove("on");}); o.classList.add("on"); return; }
+    var gb=e.target.closest("#gen-stmt");
+    if(gb){
+      var card=document.querySelector(".stmt-card.on h5");
+      var kind=(card&&card.textContent.indexOf("Detailed")>=0)?"Detailed":"Concise";
+      var picks=document.querySelectorAll(".stmt-row .pick.on b");
+      var toDate=picks[0]&&picks[0].textContent.indexOf("today")>=0;
+      var email=picks[1]&&picks[1].textContent.indexOf("Email")>=0;
+      var tag=toDate?"2026-09-06":"2026-08-31";
+      var when=toDate?"to today, 6 September 2026":"to 31 August 2026";
+      if(email){
+        toast("<b>"+kind+" statement "+when+"</b> is on its way to greg.flash@gmail.com. It usually arrives within a minute.");
+      } else if(window.STATEMENTS_BASE){
+        window.open(window.STATEMENTS_BASE+"Vault22-"+kind+"-"+tag+".pdf","_blank","noopener");
+        toast("<b>"+kind+" statement "+when+"</b> opened in a new tab.");
+      } else {
+        toast("<b>"+kind+" statement "+when+"</b> — the generated PDFs ship with the hosted build of this prototype.");
+      }
+      return;
+    }
+    var pk=e.target.closest("[data-pick]");
+    if(pk){
+      var g=pk.dataset.pick, sel=pk.classList.contains("stmt-card")?".stmt-card":".pick";
+      pk.parentNode.querySelectorAll(sel+'[data-pick="'+g+'"]').forEach(function(x){x.classList.remove("on");});
+      pk.classList.add("on");
+    }
+  });
+})();
+</script>
+
+</body></html>
