@@ -27,11 +27,12 @@ are the ones that need a view.
 
 Prototype only. The view is live, the numbers behind it are static:
 
-- Managed portfolio values and performance are the specimen values from the Vault22 Concise and
-  Detailed Statements for the quarter to 30 June 2026, and reconcile to the cent before rounding.
-- Securities carry Uday's prototype figures.
+- Every value, holding and income line is taken from the Vault22 Concise and Detailed Statements
+  for the quarter to 31 August 2026, and reconciles to the cent before rounding — the direct
+  security included. Total value ZAR 1,216,594.03, invested ZAR 1,186,655.94, available to invest
+  ZAR 29,938.09.
 - Fund names, tickers, ISINs and TERs are read from the Investment Management database.
-- Goals, both price series, and income lines are illustrative.
+- Goals and the AAPL share price series are illustrative.
 - USDZAR 18.42 is a placeholder pending a rate-source decision.
 
 No real client data appears anywhere in this repo.
@@ -49,7 +50,9 @@ The **Generate statement** button resolves the Concise/Detailed and period selec
 | Detailed · to today | `statements/Vault22-Detailed-2026-09-06.pdf` |
 
 Wiring is switched on by `window.STATEMENTS_BASE` in `index.html`, which is set to `statements/`
-in this build, so the button serves the real PDFs. If it is ever unset the button falls back to an
+in this build, so the button serves the real PDFs. It downloads via an `<a download>` rather than
+`window.open`, because GitHub Pages sends no `Content-Disposition` and a plain link would open the
+browser's PDF viewer instead of saving the file. If it is ever unset the button falls back to an
 explanatory message rather than opening a dead link.
 
 The PDFs are specimens, marked `SPECIMEN · REAL MARKET PRICES, INVENTED HOLDINGS` on every page.
