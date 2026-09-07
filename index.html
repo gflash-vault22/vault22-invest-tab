@@ -166,8 +166,8 @@ button.rowgrid:hover{background:var(--line2)}
 /* any disclosure button rotates its own chevron - the wallet and invested cells
    sit outside .row, so the rule above never reached them */
 [data-toggle][aria-expanded="true"] .chev{transform:rotate(90deg)}
-.glab{display:block;font-size:9.5px;font-weight:700;letter-spacing:.13em;
-  text-transform:uppercase;color:var(--faint);margin-bottom:3px}
+.chip .gk{font-weight:700;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+  opacity:.62;margin-right:5px}
 .terlab{font-weight:500;color:var(--faint);font-size:11px;
   font-family:"IBM Plex Mono",ui-monospace,monospace;letter-spacing:-.01em}
 /* the bold total row ran its figures together on a narrow viewport */
@@ -177,11 +177,13 @@ table.fit td+td,table.fit th+th{padding-left:9px}
 .split{font-weight:700;font-size:12.5px;color:var(--accent);min-width:54px;text-align:right}
 .wal:not(:last-child){border-radius:0}
 .wal-row.tot-row{border-top:1px solid var(--line);margin-top:2px;padding-top:11px}
+.walact{padding:0 0 14px}
+.walact .card{margin-bottom:0}
 .btn[disabled]{opacity:.45;cursor:not-allowed;border-style:dashed}
 .btn[disabled]:hover{filter:none;background:transparent}
-.r-name{font-weight:700;font-size:13.5px}
+.r-name{display:block;font-weight:700;font-size:13.5px}
 .r-name .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--accent);margin-right:7px}
-.r-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
+.r-sub{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
 .chip{display:inline-block;border-radius:20px;padding:2.5px 9px;font-size:11px;font-weight:600;
   border:1px solid var(--line);color:var(--ink2);max-width:100%}
 .chip-goal{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
@@ -319,7 +321,8 @@ th:first-child,td:first-child{text-align:left}
 td{padding:7px 0;border-bottom:1px solid var(--line2);text-align:right;font-size:12.5px}
 td.nm .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;margin-right:8px;color:var(--ink)}
 td.nm .dsc{color:var(--muted)}
-tr.tot td{font-weight:700;border-bottom:0;border-top:1px solid var(--line)}
+tr.tot td{font-weight:800;font-size:13px;border-bottom:0;
+  border-top:2px solid var(--ink2);padding-top:10px}
 tr.cash td{color:var(--muted)}
 .rounding{font-size:11.5px;color:var(--faint);margin:8px 0 0}
 .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px 18px}
@@ -493,14 +496,55 @@ svg{display:block;width:100%;height:auto}
           <span class="ref tip" tabindex="0">ZAR-WLT-100482<span class="tipbox">Held at ABSA Bank.</span></span>
           <span class="wal-v num">ZAR 9,986</span>
           <button class="btn sm">Top up</button><button class="btn sm ghost">Withdraw</button>
+          <button class="btn sm ghost" data-toggle="d-wal-zar" aria-expanded="false"><span class="chev">▶</span> Activity</button>
         </div>
         <div class="wal-row">
           <span>🌐</span>
           <span class="wal-n">Global wallet</span>
           <span class="ref tip" tabindex="0">USD-WLT-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
-          <span class="wal-v num">USD 1,083</span>
+          <span class="wal-v num">USD 1,083 <span class="zeq">(R 19,952)</span></span>
           <button class="btn sm">Top up</button><button class="btn sm ghost">Withdraw</button>
+          <button class="btn sm ghost" data-toggle="d-wal-usd" aria-expanded="false"><span class="chev">▶</span> Activity</button>
         </div>
+      <div class="walact" id="d-wal-zar" hidden>
+        <div class="card">
+          <h4>South Africa wallet activity<small>ABSA Bank · ZAR-WLT-100482 · shown to 30 April; the full quarter continues in your online statement.</small></h4>
+          <table class="fit sm">
+            <thead><tr><th>Date</th><th>Description</th><th>Money out</th><th>Money in</th><th>Balance</th></tr></thead>
+            <tbody>
+              <tr><td>1 Apr</td><td class="nm"><span class="hn">Opening balance</span></td><td class="num"></td><td class="num"></td><td class="num">R 8,450.00</td></tr>
+              <tr><td>2 Apr</td><td class="nm"><span class="hn">Income swept from SA Momentum</span><span class="dsc">income in</span></td><td class="num"></td><td class="num">R 2,216.73</td><td class="num">R 10,666.73</td></tr>
+              <tr><td>20 Apr</td><td class="nm"><span class="hn">Bank deposit</span><span class="dsc">instant EFT</span></td><td class="num"></td><td class="num">R 45,000.00</td><td class="num">R 55,666.73</td></tr>
+              <tr><td>22 Apr</td><td class="nm"><span class="hn">SA Momentum — lump-sum investment</span><span class="dsc">invested</span></td><td class="num">R 40,000.00</td><td class="num"></td><td class="num">R 15,666.73</td></tr>
+              <tr><td>22 Apr</td><td class="nm"><span class="hn">Advice fee — 22 Apr</span><span class="dsc">incl. VAT</span></td><td class="num">R 234.60</td><td class="num"></td><td class="num">R 15,432.13</td></tr>
+              <tr><td>30 Apr</td><td class="nm"><span class="hn">Income swept from SA Momentum</span><span class="dsc">income in</span></td><td class="num"></td><td class="num">R 16.01</td><td class="num">R 15,448.14</td></tr>
+              <tr><td>30 Apr</td><td class="nm"><span class="hn">Custody fee — April</span><span class="dsc">incl. VAT</span></td><td class="num">R 38.88</td><td class="num"></td><td class="num">R 15,409.26</td></tr>
+              <tr><td>30 Apr</td><td class="nm"><span class="hn">Vault22 Premium subscription — April</span><span class="dsc">R150.00 a month plus VAT · one charge for the whole account</span></td><td class="num">R 172.50</td><td class="num"></td><td class="num">R 15,236.76</td></tr>
+              <tr class="tot"><td>Whole-quarter totals · closing balance</td><td></td><td class="num">R 66,138.68</td><td class="num">R 67,675.15</td><td class="num">R 9,986.47</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="walact" id="d-wal-usd" hidden>
+        <div class="card">
+          <h4>Global wallet activity<small>Alpaca Securities · USD-WLT-100482 · shown to 12 June; the full quarter continues in your online statement.</small></h4>
+          <table class="fit sm">
+            <thead><tr><th>Date</th><th>Description</th><th>Money out</th><th>Money in</th><th>Balance</th></tr></thead>
+            <tbody>
+              <tr><td>1 Apr</td><td class="nm"><span class="hn">Opening balance</span></td><td class="num"></td><td class="num"></td><td class="num">$ 1,240.50</td></tr>
+              <tr><td>7 Apr</td><td class="nm"><span class="hn">Income swept from Global Core</span><span class="dsc">income in</span></td><td class="num"></td><td class="num">$ 36.56</td><td class="num">$ 1,277.06</td></tr>
+              <tr><td>8 Apr</td><td class="nm"><span class="hn">Bank deposit</span><span class="dsc">instant EFT</span></td><td class="num"></td><td class="num">$ 6,000.00</td><td class="num">$ 7,277.06</td></tr>
+              <tr><td>15 Apr</td><td class="nm"><span class="hn">Global Core — lump-sum investment</span><span class="dsc">invested</span></td><td class="num">$ 6,000.00</td><td class="num"></td><td class="num">$ 1,277.06</td></tr>
+              <tr><td>15 Apr</td><td class="nm"><span class="hn">Advice fee — 15 Apr</span><span class="dsc">incl. VAT</span></td><td class="num">$ 35.19</td><td class="num"></td><td class="num">$ 1,241.87</td></tr>
+              <tr><td>15 Apr</td><td class="nm"><span class="hn">AAPL — direct purchase</span><span class="dsc">1.5000 shares</span></td><td class="num">$ 434.95</td><td class="num"></td><td class="num">$ 806.92</td></tr>
+              <tr><td>15 May</td><td class="nm"><span class="hn">Dividend swept from AAPL</span><span class="dsc">income in</span></td><td class="num"></td><td class="num">$ 1.09</td><td class="num">$ 808.01</td></tr>
+              <tr><td>18 May</td><td class="nm"><span class="hn">Transfer in from South Africa wallet</span><span class="dsc">R13,271.76 at 16.5897</span></td><td class="num"></td><td class="num">$ 800.00</td><td class="num">$ 1,608.01</td></tr>
+              <tr><td>12 Jun</td><td class="nm"><span class="hn">AAPL — direct purchase</span><span class="dsc">1.5000 shares</span></td><td class="num">$ 445.15</td><td class="num"></td><td class="num">$ 1,162.86</td></tr>
+              <tr class="tot"><td>Whole-quarter totals · closing balance</td><td></td><td class="num">$ 10,220.57</td><td class="num">$ 10,063.22</td><td class="num">$ 1,083.15</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -533,7 +577,7 @@ svg{display:block;width:100%;height:auto}
                 <span class="r-name">SA Momentum</span>
                 <span class="r-sub">Risk profile · Growth</span>
               </span>
-              <span class="r-goal"><span class="glab">Goal</span><span class="chip chip-goal">🎯 Gabi Education</span></span>
+              <span class="r-goal"><span class="chip chip-goal"><span class="gk">Goal</span>Gabi Education</span></span>
               <span class="r-val"><span class="v num">R275,322</span><br><span class="c num">cost R249,966</span></span>
               <span class="r-pl gain"><span class="num">+R25,355</span><br><span class="pct num">+10.1%</span></span>
             </button>
@@ -623,7 +667,7 @@ svg{display:block;width:100%;height:auto}
                   <tr class="tot"><td>Total</td><td></td><td></td><td></td><td class="num">R303.85</td><td class="num">R45.57</td><td class="num">R349.42</td></tr>
                 </tbody>
               </table>
-              <p class="rounding">Fees are debited from your ZAR wallet, not from the portfolio. <b>Brokerage of R57.37, including R7.48 VAT, was charged inside the orders</b> — it is already in what you paid for your holdings and is never billed to your wallet. Your Premium subscription is charged once for the whole account and is shown under Wallet activity.</p>
+              <p class="rounding">Fees are debited from your ZAR wallet, not from the portfolio. <b>Brokerage of R57.37, including R7.48 VAT, was charged inside the orders</b> — it is already in what you paid for your holdings and is never billed to your wallet. Your Premium subscription of R150.00 a month is charged once for the whole account, not per portfolio, so it is not in the costs above — it is in <b>Wallet activity</b>, under Available to invest.</p>
             </div>
 
             <div class="card">
@@ -699,7 +743,7 @@ svg{display:block;width:100%;height:auto}
                 <span class="r-name">Global Core</span>
                 <span class="r-sub">Risk profile · Balanced</span>
               </span>
-              <span class="r-goal"><span class="glab">Goal</span><span class="chip chip-goal">🎯 Retirement</span></span>
+              <span class="r-goal"><span class="chip chip-goal"><span class="gk">Goal</span>Retirement</span></span>
               <span class="r-val"><span class="v num">$48,560</span><br><span class="c num">cost $41,224</span></span>
               <span class="r-pl gain"><span class="num">+$7,336</span><br><span class="pct num">+17.8%</span></span>
             </button>
@@ -838,7 +882,7 @@ svg{display:block;width:100%;height:auto}
                 <span class="r-name"><span class="tk">AAPL</span>Apple Inc.</span>
                 <span class="r-sub">3 shares · avg $293.37 · NASDAQ</span>
               </span>
-              <span class="r-goal"><span class="glab">Goal</span><span class="chip chip-none">+ attach a goal</span></span>
+              <span class="r-goal"><span class="chip chip-none"><span class="gk">Goal</span>+ attach</span></span>
               <span class="r-val"><span class="v num">$916</span><br><span class="c num">cost $880</span></span>
               <span class="r-pl gain"><span class="num">+$36</span><br><span class="pct num">+4.0%</span></span>
             </button>
@@ -1161,7 +1205,9 @@ svg{display:block;width:100%;height:auto}
 <script>window.STATEMENTS_BASE="statements/";</script>
 <script>
 (function(){
-var PD={"sam":{"1M":{"money":3180,"pct":1.2,"worth":[168727.82,180902.92,193558.78,199831.39,209273.12,218558.65,226142.3,234741.06,245758.22,251898.76,257485.31,269726.14,275321.65],"put":[168727.82,181238.32,191278.0,200557.16,209374.55,217863.74,226100.24,234132.36,241993.58,249708.37,257295.36,264769.19,272141.65]},"3M":{"money":9462,"pct":3.6,"worth":[164832.98,179186.78,187132.19,197514.51,205339.94,218380.01,223148.47,234424.68,242603.35,251713.64,258387.12,266488.2,275321.65],"put":[164832.98,177054.69,186862.63,195927.59,204541.44,212834.67,220881.04,228727.75,236407.5,243944.21,251356.06,258657.37,265859.65]},"6M":{"money":12910,"pct":4.9,"worth":[162695.22,177063.83,185922.3,196038.92,204523.96,212541.2,222647.13,230542.98,238959.54,247767.79,255573.56,267083.58,275321.65],"put":[162695.22,174758.43,184439.16,193386.55,201888.69,210074.36,218016.37,225761.32,233341.48,240780.43,248096.16,255302.78,262411.65]},"1Y":{"money":18240,"pct":7.1,"worth":[159390.62,170669.64,184643.68,191336.61,203535.22,213486.66,222373.0,229332.45,238640.89,249663.61,260075.05,267348.75,275321.65],"put":[159390.62,171208.8,180692.9,189458.56,197788.0,205807.41,213588.11,221175.75,228601.94,235889.8,243056.93,250117.17,257081.65]},"MAX":{"money":25355,"pct":10.1,"worth":[154979.32,167220.64,179121.27,186824.24,200900.29,210010.81,220559.63,226539.18,235673.21,244318.46,254495.2,262929.28,275321.65],"put":[154979.32,166470.42,175692.04,184215.1,192314.02,200111.48,207676.84,215054.48,222275.14,229361.3,236330.08,243194.92,249966.65]}},"gc":{"1M":{"money":980,"pct":2.3,"worth":[29499.39,31499.9,33536.84,35475.95,37053.24,38651.3,39926.16,41757.35,42988.58,44000.44,45801.78,46796.53,48559.66],"put":[29499.39,31686.65,33441.93,35064.25,36605.83,38090.03,39530.05,40934.34,42308.75,43657.56,44984.02,46290.7,47579.66]},"3M":{"money":4073,"pct":9.5,"worth":[27581.73,29892.1,31500.4,33401.09,35256.2,36630.14,38714.41,40796.02,41997.65,44049.25,45848.85,46554.15,48559.66],"put":[27581.73,29626.8,31267.98,32784.83,34226.2,35613.92,36960.33,38273.33,39558.39,40819.52,42059.75,43281.49,44486.66]},"6M":{"money":5410,"pct":13.0,"worth":[26752.79,28881.63,30756.6,32760.66,34376.02,36339.91,37858.33,39962.17,41755.64,43308.5,45524.15,46499.53,48559.66],"put":[26752.79,28736.4,30328.25,31799.52,33197.57,34543.58,35849.52,37123.06,38369.51,39592.73,40795.69,41980.71,43149.66]},"1Y":{"money":6290,"pct":15.2,"worth":[26207.19,28284.49,30361.53,32094.96,33977.23,36134.52,37500.61,39460.57,41123.09,43657.74,45016.93,46657.75,48559.66],"put":[26207.19,28150.35,29709.73,31150.99,32520.53,33839.09,35118.4,36365.97,37586.99,38785.27,39963.7,41124.55,42269.66]},"MAX":{"money":7336,"pct":17.8,"worth":[25558.67,28020.44,29843.19,32079.08,33626.57,35789.02,36992.58,39143.43,40681.59,42415.71,44347.21,46421.76,48559.66],"put":[25558.67,27453.74,28974.54,30380.14,31715.78,33001.71,34249.37,35466.06,36656.87,37825.5,38974.76,40106.89,41223.66]}}},SYM={sam:"R",gc:"$"};
+var PD={"sam":{"1M":{"worth":[272701.69,272532.75,272493.19,272522.31,272597.01,272685.92,272486.3,272534.79,272703.03,272684.44,275314.54,275312.24,275321.65]},"3M":{"worth":[266946.9,267221.03,267434.38,267673.97,269775.34,269472.47,269526.91,270108.87,272701.69,272522.31,272486.3,272684.44,275321.65]},"6M":{"worth":[243499.47,244722.25,245322.09,285543.11,285270.89,286007.15,266946.9,267434.38,269775.34,269526.91,272701.69,272486.3,275321.65]},"1Y":{"worth":[237011.27,238523.11,240562.66,241436.19,242393.68,242281.99,243449.21,245392.11,285443.8,266974.27,269775.34,272738.15,275321.65]},"MAX":{"worth":[222466.38,222945.58,225649.54,226209.92,229362.08,231203.98,235753.06,235417.1,237011.27,241436.19,243449.21,266974.27,275321.65]}},"gc":{"1M":{"worth":[48138.4,48118.23,48117.68,48132.47,48152.1,48177.47,48151.86,48166.86,48206.26,48209.42,48542.18,48548.26,48559.66]},"3M":{"worth":[50209.13,47284.27,47344.16,47711.92,47667.13,47635.91,47671.01,48099.49,48138.4,48132.47,48151.86,48209.42,48559.66]},"6M":{"worth":[42722.44,42980.04,43131.49,49209.46,49512.26,49693.16,50209.13,47344.16,47667.13,47671.01,48138.4,48151.86,48559.66]},"1Y":{"worth":[41084.05,41429.09,41870.0,42106.38,42361.05,42426.52,42716.48,43146.69,49545.58,50217.63,47667.13,48148.06,48559.66]},"MAX":{"worth":[36723.89,37027.55,37707.79,38032.07,38797.29,39350.09,40369.1,40557.54,41084.05,42106.38,42716.48,50217.63,48559.66]}}}
+var FLOWS={"sam":[["2026-04-22",40000.0],["2026-06-05",-20000.0],["2026-07-01",2500.0],["2026-08-03",2500.0],["2026-09-01",2500.0]],"gc":[["2026-04-15",6000.0],["2026-04-30",300.0],["2026-05-29",300.0],["2026-06-10",-3000.0],["2026-06-30",300.0],["2026-07-31",300.0],["2026-08-31",300.0]]};
+var SYM={sam:"R",gc:"$"};
 var SD={"aapl":{"sym":"$","avg":293.37,"px":[250.34,250.74,259.77,254.88,263.56,263.93,262.41,271.08,267.28,275.32,272.87,275.74,283.06,291.45,283.95,287.98,296.53,303.94,301.07,300.98,312.44,300.83,316.0,309.78,305.2]}};
 
 var TODAY = new Date();
@@ -1199,9 +1245,24 @@ function dateTicks(per){
 }
 function fmtDay(d){ return d.getDate()+" "+MONTHS[d.getMonth()]+" "+String(d.getFullYear()).slice(2); }
 
+// What you put in only changes when money moves: flat between flows, a vertical
+// step on each buy or sell. Built from the same transactions the row lists below.
+function stepBaseline(key, startVal, dt){
+  var out=[{d:dt.start, v:startVal}], v=startVal;
+  (FLOWS[key]||[]).forEach(function(f){
+    var fd=new Date(f[0]+"T00:00:00");
+    if(fd<=dt.start || fd>dt.end) return;
+    out.push({d:fd, v:v});
+    v+=f[1];
+    out.push({d:fd, v:v});
+  });
+  out.push({d:dt.end, v:v});
+  return out;
+}
 function renderChart(el, opt){
   var X0=58,X1=606,Y0=16,Y1=146, W=X1-X0, H=Y1-Y0;
-  var all=[].concat(opt.series[0].v); if(opt.series[1]) all=all.concat(opt.series[1].v);
+  var all=[].concat(opt.series[0].v);
+  if(opt.step) all=all.concat(opt.step.map(function(x){return x.v;}));
   if(opt.hline!=null) all.push(opt.hline);
   var lo=Math.min.apply(null,all), hi=Math.max.apply(null,all);
   var pad=(hi-lo)*0.12||1; var tk=niceTicks(lo-pad,hi+pad,4);
@@ -1228,7 +1289,8 @@ function renderChart(el, opt){
   });
   var main=opt.series[0].v;
   s+='<polygon fill="var(--accent-soft)" points="'+X0+','+Y1+' '+pts(main)+' '+X1+','+Y1+'"/>';
-  if(opt.series[1]) s+='<polyline fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" points="'+pts(opt.series[1].v)+'"/>';
+  if(opt.step) s+='<polyline fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" stroke-linejoin="miter" points="'
+      +opt.step.map(function(x){ return XD(x.d)+","+Y(x.v); }).join(" ")+'"/>';
   s+='<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="'+pts(main)+'"/>';
   if(opt.hline!=null){
     s+='<line x1="'+X0+'" y1="'+Y(opt.hline)+'" x2="'+X1+'" y2="'+Y(opt.hline)+'" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="5 4"/>';
@@ -1242,12 +1304,15 @@ function renderChart(el, opt){
 function drawP(key,per){
   var d=PD[key][per], sym=SYM[key];
   var el=document.getElementById("ch-"+key); if(!el) return;
+  var step=stepBaseline(key, d.worth[0], dateTicks(per));
+  var putIn=step[step.length-1].v, worth=d.worth[d.worth.length-1];
+  var money=worth-putIn, pct=money/putIn*100;
   renderChart(el,{per:per,sym:sym,ylab:"VALUE · "+(sym==="R"?"ZAR":"USD"),
     alt:"What the portfolio is worth against what you put in",
-    series:[{v:d.worth},{v:d.put}]});
+    series:[{v:d.worth}], step:step});
   var m=document.getElementById("ret-"+key+"-money"), q=document.getElementById("ret-"+key+"-pct");
-  if(m) m.textContent=(d.money<0?"−":"+")+sym+Math.abs(d.money).toLocaleString("en-US");
-  if(q) q.textContent=(d.pct<0?"−":"+")+Math.abs(d.pct).toFixed(1)+"%";
+  if(m) m.textContent=(money<0?"−":"+")+sym+Math.abs(Math.round(money)).toLocaleString("en-US");
+  if(q) q.textContent=(pct<0?"−":"+")+Math.abs(pct).toFixed(1)+"%";
 }
 var SLICE={"1M":4,"3M":7,"6M":13,"1Y":19,"MAX":25};
 function drawS(key,per){
