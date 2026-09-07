@@ -57,6 +57,16 @@ explanatory message rather than opening a dead link.
 
 The PDFs are specimens, marked `SPECIMEN · REAL MARKET PRICES, INVENTED HOLDINGS` on every page.
 
+### One deliberate difference from the PDFs
+
+Global Core's monthly debit orders read **$299.00 consideration / $1.00 brokerage** on this page, where
+the statements show $297.00 / $3.00. The statements state the rule on page 7 — *"0.15% of the
+consideration with a $1.00 minimum **per instruction**"* — but then apply that minimum once per market
+order on page 4, three times for one $300 instruction. The page follows the stated rule. Cash effect,
+cost and every total are unchanged either way, so the headline figures still reconcile; only the
+consideration/brokerage split differs. **The statement generator needs the same fix**, after which the
+two agree again.
+
 ## Layout
 
 ```
