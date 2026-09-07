@@ -163,6 +163,22 @@ main h2{font-size:23px;font-weight:800}
 button.rowgrid:hover{background:var(--line2)}
 .chev{color:var(--faint);font-size:11px;transition:transform .15s;display:inline-block}
 .row[data-open] .chev{transform:rotate(90deg)}
+/* any disclosure button rotates its own chevron - the wallet and invested cells
+   sit outside .row, so the rule above never reached them */
+[data-toggle][aria-expanded="true"] .chev{transform:rotate(90deg)}
+.glab{display:block;font-size:9.5px;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:3px}
+.terlab{font-weight:500;color:var(--faint);font-size:11px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;letter-spacing:-.01em}
+/* the bold total row ran its figures together on a narrow viewport */
+table.fit td+td,table.fit th+th{padding-left:9px}
+.zeq{font-weight:600;color:var(--faint);font-size:.78em;white-space:nowrap}
+.grp-head .zeq{color:var(--navy-muted)}
+.split{font-weight:700;font-size:12.5px;color:var(--accent);min-width:54px;text-align:right}
+.wal:not(:last-child){border-radius:0}
+.wal-row.tot-row{border-top:1px solid var(--line);margin-top:2px;padding-top:11px}
+.btn[disabled]{opacity:.45;cursor:not-allowed;border-style:dashed}
+.btn[disabled]:hover{filter:none;background:transparent}
 .r-name{font-weight:700;font-size:13.5px}
 .r-name .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--accent);margin-right:7px}
 .r-sub{font-size:11.5px;color:var(--muted);margin-top:1px}
@@ -425,9 +441,12 @@ svg{display:block;width:100%;height:auto}
       </div>
       <div class="tv-split">
         <div class="tv-cell">
-          <div class="k">Invested</div>
-          <div class="v num">ZAR 1,186,656</div>
-          <div class="p">97.5% · 2 portfolios, 1 security</div>
+          <button class="tv-btn" data-toggle="d-invested" aria-expanded="false">
+            <span class="chev">▶</span>
+            <span class="k">Invested</span>
+            <span class="v num">ZAR 1,186,656</span>
+            <span class="p">97.5% · 2 portfolios, 1 security</span>
+          </button>
           <div class="bar"><i style="width:97.5%;background:var(--brand)"></i></div>
         </div>
         <div class="tv-cell">
@@ -442,6 +461,29 @@ svg{display:block;width:100%;height:auto}
             <span class="v num">ZAR 29,938</span>
             <span class="p">2.5% · <span class="tip" tabindex="0">wallet cash<span class="tipbox">Portfolio cash sleeves sit inside a portfolio, count in its value and its return, and are <b>not</b> available to invest.</span></span></span>
           </button>
+        </div>
+      </div>
+      <div class="wal" id="d-invested" hidden>
+        <div class="wal-row">
+          <span>🇿🇦</span>
+          <span class="wal-n">South Africa</span>
+          <span class="ref">SA Momentum · managed</span>
+          <span class="wal-v num">R 275,322</span>
+          <span class="split num">23.2%</span>
+        </div>
+        <div class="wal-row">
+          <span>🌐</span>
+          <span class="wal-n">Global</span>
+          <span class="ref">Global Core · managed, plus AAPL</span>
+          <span class="wal-v num">$ 49,475 <span class="zeq">(R 911,334)</span></span>
+          <span class="split num">76.8%</span>
+        </div>
+        <div class="wal-row tot-row">
+          <span style="width:1.1em"></span>
+          <span class="wal-n">Invested</span>
+          <span class="ref">converted at USDZAR 18.42, value only</span>
+          <span class="wal-v num">ZAR 1,186,656</span>
+          <span class="split num">100.0%</span>
         </div>
       </div>
       <div class="wal" id="d-wallets" hidden>
@@ -491,7 +533,7 @@ svg{display:block;width:100%;height:auto}
                 <span class="r-name">SA Momentum</span>
                 <span class="r-sub">Risk profile · Growth</span>
               </span>
-              <span class="r-goal"><span class="chip chip-goal">🎯 Gabi Education</span></span>
+              <span class="r-goal"><span class="glab">Goal</span><span class="chip chip-goal">🎯 Gabi Education</span></span>
               <span class="r-val"><span class="v num">R275,322</span><br><span class="c num">cost R249,966</span></span>
               <span class="r-pl gain"><span class="num">+R25,355</span><br><span class="pct num">+10.1%</span></span>
             </button>
@@ -515,7 +557,7 @@ svg{display:block;width:100%;height:auto}
                   <tr><td class="nm"><span class="hn">Ninety One Diversified Income Prescient Feeder AMETF</span><span class="dsc">91DINC · ZAE000347043</span></td><td class="num">7.1%</td><td class="num">R19,571</td><td class="num">R19,089</td><td class="num gain">+R482</td></tr>
                   <tr><td class="nm"><span class="hn">Prescient Income Provider Feeder AMETF</span><span class="dsc">PIPETF · ZAE000328407 · TER 0.5%</span></td><td class="num">6.9%</td><td class="num">R18,889</td><td class="num">R18,581</td><td class="num gain">+R307</td></tr>
                   <tr class="cash"><td class="nm"><span class="hn">STeFI Call Deposit ZAR</span><span class="dsc"><span class="tip" tabindex="0">portfolio cash<span class="tipbox">Part of the portfolio's value and its return, earning 7.3% a year. Not the same as your wallet, and not available to invest.</span></span></span></td><td class="num">0.9%</td><td class="num">R2,593</td><td class="num">R2,593</td><td class="num">—</td></tr>
-                  <tr class="tot"><td>Portfolio</td><td class="num">100.0%</td><td class="num">R275,322</td><td class="num">R249,966</td><td class="num gain">+R25,355</td></tr>
+                  <tr class="tot"><td>Portfolio <span class="terlab">weighted TER 0.32%</span></td><td class="num">100.0%</td><td class="num">R275,322</td><td class="num">R249,966</td><td class="num gain">+R25,355</td></tr>
                 </tbody>
               </table>
               <p class="rounding">Rounded — columns may differ from their total by a unit.</p>
@@ -623,7 +665,7 @@ svg{display:block;width:100%;height:auto}
         <span class="gsum">South Africa invested <b class="num">ZAR 275,322</b> · <b class="num gain">+ZAR 25,355</b> <span class="num gain">+10.1%</span></span>
         <span class="acts" style="margin-left:auto">
           <button class="btn sm ghost">+ Add a portfolio</button>
-          <button class="btn sm ghost">+ Buy a security</button>
+          <button class="btn sm ghost" disabled>+ Buy a security (coming soon)</button>
         </span>
       </div>
     </div>
@@ -633,11 +675,11 @@ svg{display:block;width:100%;height:auto}
       <div class="grp-head">
         <span>🌐</span>
         <span class="grp-name">Global</span>
-        <span class="grp-tot num">USD 50,558</span>
+        <span class="grp-tot num">USD 50,558 <span class="zeq">(R 931,286)</span></span>
       </div>
       <div class="avail">
         <span class="k">Wallet · available to invest</span>
-        <span class="v num">USD 1,083</span>
+        <span class="v num">USD 1,083 <span class="zeq">(R 19,952)</span></span>
         <span class="ref tip" tabindex="0">USD-WLT-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
         <button class="btn sm">Top up</button>
       </div>
@@ -647,7 +689,7 @@ svg{display:block;width:100%;height:auto}
           <span class="acct-name">Managed account</span>
           <span class="badge b-adv">Advised</span>
           <span class="ref tip" tabindex="0">USD-MAN-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
-          <span class="acct-val num">USD 48,560</span>
+          <span class="acct-val num">USD 48,560 <span class="zeq">(R 894,469)</span></span>
         </div>
         <div class="row">
           <div class="rowline">
@@ -657,7 +699,7 @@ svg{display:block;width:100%;height:auto}
                 <span class="r-name">Global Core</span>
                 <span class="r-sub">Risk profile · Balanced</span>
               </span>
-              <span class="r-goal"><span class="chip chip-goal">🎯 Retirement</span></span>
+              <span class="r-goal"><span class="glab">Goal</span><span class="chip chip-goal">🎯 Retirement</span></span>
               <span class="r-val"><span class="v num">$48,560</span><br><span class="c num">cost $41,224</span></span>
               <span class="r-pl gain"><span class="num">+$7,336</span><br><span class="pct num">+17.8%</span></span>
             </button>
@@ -677,7 +719,7 @@ svg{display:block;width:100%;height:auto}
                   <tr><td class="nm"><span class="hn">iShares Core International Aggregate Bond ETF</span><span class="dsc">IAGG · US46435G6724 · TER 0.1%</span></td><td class="num">16.3%</td><td class="num">$7,934</td><td class="num">$7,724</td><td class="num gain">+$210</td></tr>
                   <tr><td class="nm"><span class="hn">iShares Core U.S. Aggregate Bond ETF</span><span class="dsc">AGG · US4642872265 · TER 0.0%</span></td><td class="num">10.5%</td><td class="num">$5,107</td><td class="num">$5,054</td><td class="num gain">+$53</td></tr>
                   <tr class="cash"><td class="nm"><span class="hn">USD cash sweep</span><span class="dsc"><span class="tip" tabindex="0">portfolio cash<span class="tipbox">Alpaca sweep account. Part of the portfolio's value and its return, earning 3.9% a year. Not the same as your wallet, and not available to invest.</span></span></span></td><td class="num">0.9%</td><td class="num">$444</td><td class="num">$444</td><td class="num">—</td></tr>
-                  <tr class="tot"><td>Portfolio</td><td class="num">100.0%</td><td class="num">$48,560</td><td class="num">$41,224</td><td class="num gain">+$7,336</td></tr>
+                  <tr class="tot"><td>Portfolio <span class="terlab">weighted TER 0.24%</span></td><td class="num">100.0%</td><td class="num">$48,560</td><td class="num">$41,224</td><td class="num gain">+$7,336</td></tr>
                 </tbody>
               </table>
               <p class="rounding">Rounded — weights sum to 99.9% and the value column to $48,561.</p>
@@ -785,7 +827,7 @@ svg{display:block;width:100%;height:auto}
           <span class="acct-name">Execution-only account</span>
           <span class="badge b-exo">No advice</span>
           <span class="ref tip" tabindex="0">USD-EXO-100482<span class="tipbox">Held at Alpaca Securities.</span></span>
-          <span class="acct-val num">USD 916</span>
+          <span class="acct-val num">USD 916 <span class="zeq">(R 16,865)</span></span>
         </div>
 
         <div class="row">
@@ -796,7 +838,7 @@ svg{display:block;width:100%;height:auto}
                 <span class="r-name"><span class="tk">AAPL</span>Apple Inc.</span>
                 <span class="r-sub">3 shares · avg $293.37 · NASDAQ</span>
               </span>
-              <span class="r-goal"><span class="chip chip-none">+ attach a goal</span></span>
+              <span class="r-goal"><span class="glab">Goal</span><span class="chip chip-none">+ attach a goal</span></span>
               <span class="r-val"><span class="v num">$916</span><br><span class="c num">cost $880</span></span>
               <span class="r-pl gain"><span class="num">+$36</span><br><span class="pct num">+4.0%</span></span>
             </button>
@@ -898,7 +940,7 @@ svg{display:block;width:100%;height:auto}
         </div>
 
         <div class="acct-head acct-foot">
-          <span class="gsum">Global invested <b class="num">USD 49,475</b> · <b class="num gain">+USD 7,371</b> <span class="num gain">+17.5%</span></span>
+          <span class="gsum">Global invested <b class="num">USD 49,475</b> <span class="zeq">(R 911,334)</span> · <b class="num gain">+USD 7,371</b> <span class="num gain">+17.5%</span></span>
           <span class="acts" style="margin-left:auto">
             <button class="btn sm ghost">+ Add a portfolio</button>
             <button class="btn sm ghost">+ Buy a security</button>
@@ -1184,10 +1226,10 @@ function renderChart(el, opt){
   edges.forEach(function(e,i){
     s+='<text x="'+e.x+'" y="'+(Y1+18)+'" text-anchor="'+(i?"end":"start")+'" fill="var(--muted)" font-size="10" font-weight="600" font-family="Manrope, sans-serif">'+e.l+'</text>';
   });
-  if(opt.series[1]) s+='<polyline fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" points="'+pts(opt.series[1].v)+'"/>';
   var main=opt.series[0].v;
-  s+='<polygon fill="var(--accent-soft)" points="'+X0+','+Y1+' '+pts(main)+' '+X1+','+Y1+'"/>'
-    +'<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="'+pts(main)+'"/>';
+  s+='<polygon fill="var(--accent-soft)" points="'+X0+','+Y1+' '+pts(main)+' '+X1+','+Y1+'"/>';
+  if(opt.series[1]) s+='<polyline fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4" points="'+pts(opt.series[1].v)+'"/>';
+  s+='<polyline fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" points="'+pts(main)+'"/>';
   if(opt.hline!=null){
     s+='<line x1="'+X0+'" y1="'+Y(opt.hline)+'" x2="'+X1+'" y2="'+Y(opt.hline)+'" stroke="var(--amber)" stroke-width="1.5" stroke-dasharray="5 4"/>';
   }
